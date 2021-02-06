@@ -1,5 +1,7 @@
 const bodyParser = require("body-parser");
 import express, {Application, Request, Response, NextFunction} from 'express';
+// import Users from '../models/users.model';
+const Users = require("../models/users.model");
 
 class Server {
     
@@ -15,7 +17,17 @@ class Server {
 
     private config():void {
         this.app.get("/",(req:Request, res:Response, next:NextFunction) => {
-            res.send("fucmj u");
+            Users.findOne({username:"ssa"}, function(err: any, result: any) {
+                if (err) {
+                    res.send(err);
+                } else if(!result){
+                    res.json({
+                        "status":"not found"
+                    })
+                } else {
+                    res.send(result);
+                }
+            });
         })
     }
 
