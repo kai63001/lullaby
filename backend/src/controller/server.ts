@@ -58,6 +58,11 @@ class Server {
             res.send("ยอดเงินคงเหลือ 50");;
         })
 
+        this.app.get('/logout', requireJWTAuth, (req:Request, res:Response, next:NextFunction) => {
+            const usertoken = req.headers.authorization
+            jwt.destroy(usertoken)
+            res.send('logout')
+        })
 
     }
 
