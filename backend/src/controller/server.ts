@@ -1,8 +1,21 @@
 const bodyParser = require("body-parser");
 import express, {Application, Request, Response, NextFunction} from 'express';
-// import Users from '../models/users.model';
 const Users = require("../models/users.model");
-
+const jwt = require("jwt-simple");
+const passport = require("passport");
+const ExtractJwt = require("passport-jwt").ExtractJwt;
+const JwtStrategy = require("passport-jwt").Strategy;
+const SECRET = "shadow";
+const jwtOptions = {
+   jwtFromRequest: ExtractJwt.fromHeader("authorization"),
+   secretOrKey: SECRET
+};
+const jwtAuth = new JwtStrategy(jwtOptions, (payload:any, done:any) => {
+   if (payload.sub) done(null, true);
+   else done(null, false);
+});
+passport.use(jwtAuth);
+const requireJWTAuth = passport.authenticate("jwt",{session:false});
 class Server {
     
     private app:Application;
@@ -11,13 +24,15 @@ class Server {
     constructor(port:number){
         this.app = express();
         this.port = port;
+        this.app.use(bodyParser.json());
         this.config();
         this.run();
     }
 
     private config():void {
-        this.app.get("/",(req:Request, res:Response, next:NextFunction) => {
-            Users.findOne({username:"ssa"}, function(err: any, result: any) {
+        
+        const loginMiddleWare = (req:Request, res:Response, next:NextFunction) => {
+            Users.findOne({username:req.body.username,password:req.body.password}, function(err: any, result: any) {
                 if (err) {
                     res.send(err);
                 } else if(!result){
@@ -25,14 +40,28 @@ class Server {
                         "status":"not found"
                     })
                 } else {
-                    res.send(result);
+                    next();
                 }
             });
+        };
+
+        this.app.post("/login", loginMiddleWare, (req:Request, res:Response) => {
+            const payload = {
+                sub: req.body.username,
+                iat: new Date().getTime()
+            };
+            res.send(jwt.encode(payload, SECRET));
+        });
+
+
+        this.app.get("/",requireJWTAuth,(req:Request, res:Response, next:NextFunction) => {
+            res.send("ยอดเงินคงเหลือ 50");;
         })
+
+
     }
 
     private run():void {
-        this.app.use(bodyParser.json());
         this.app.listen(this.port, ()=> {
             console.log(`server start on port : ${this.port}`)
         })
