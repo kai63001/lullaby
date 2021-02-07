@@ -13,14 +13,14 @@ class Auth {
     this.initializeRoutes();
   }
 
-  public initializeRoutes() {
+  public initializeRoutes():void {
     this.router.post(`${this.path}/login`, loginMiddleWare, this.login);
     this.router.get(`${this.path}/logout`, authRequest, this.logout);
     this.router.post(`${this.path}/register`, registerMiddleWare, this.register);
 
   }
 
-  private async login( req: any, res: Response, next: NextFunction) {
+  private login( req: any, res: Response, next: NextFunction):void {
       const payload = {
           id: req.userId,
           username: req.body.username,
@@ -29,11 +29,11 @@ class Auth {
       res.send(jwt.encode(payload, "shadow"));
   }
 
-  private async register(req:Request,res:Response){
+  private register(req:Request,res:Response):void{
     res.send("register success")
   }
 
-  private async logout( req: Request, res: Response, next: NextFunction) {
+  private logout( req: Request, res: Response, next: NextFunction):void {
       res.send("logout")
   }
 
