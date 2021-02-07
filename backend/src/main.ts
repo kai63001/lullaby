@@ -1,4 +1,7 @@
-import Server from './controller/server';
-import Db from './connection/db';
-const server = new Server(3000);
-const db = new Db();
+import App from "./app";
+
+import UsersController from "./controller/main/main.controller";
+
+const app = new App([new UsersController()]);
+
+app.listen();

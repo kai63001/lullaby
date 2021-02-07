@@ -16,10 +16,12 @@ const jwtAuth = new JwtStrategy(jwtOptions, (payload:any, done:any) => {
 });
 passport.use(jwtAuth);
 const requireJWTAuth = passport.authenticate("jwt",{session:false});
+
 class Server {
     
     private app:Application;
     private port:number;
+    // private auth:Auther = new Auther();
 
     constructor(port:number){
         this.app = express();
@@ -53,6 +55,9 @@ class Server {
             res.send(jwt.encode(payload, SECRET));
         });
 
+        this.app.post("/register", (req:Request,res:Response) => {
+            
+        });
 
         this.app.get("/",requireJWTAuth,(req:Request, res:Response, next:NextFunction) => {
             res.send("ยอดเงินคงเหลือ 50");;
