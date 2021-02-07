@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:Lullaby/components/alert.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -44,30 +45,7 @@ class _RegisterState extends State<Register> {
           },
         );
       }else if(usernameController.text.isEmpty || passwordController.text.isEmpty || conpasswordController.text.isEmpty){
-        return showDialog<void>(
-          context: context,
-          barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Alert'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Text('Please enter username and password'),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Approve'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        return buildShowDialog(context,'Please enter username and password');
       }else{
         final response = await http.post(
           'http://192.168.33.105:3000/auth/register',
@@ -262,7 +240,7 @@ class _RegisterState extends State<Register> {
           },
           child: Container(
             width: MediaQuery.of(context).size.width * 0.8,
-            height: MediaQuery.of(context).size.width * 0.15,
+            height: MediaQuery.of(context).size.height * 0.08,
             decoration: new BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(18.0),
@@ -280,4 +258,5 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
+
 }

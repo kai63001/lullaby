@@ -67,8 +67,8 @@ class _MyHomePageState extends State<MyHomePage> {
             Center(
               child: Image.asset(
                 'assets/images/sad.png',
-                height: 300,
-                width: 300,
+                height: MediaQuery.of(context).size.height * 0.3,
+                width: MediaQuery.of(context).size.width * 0.8,
               ),
             ),
             Padding(
