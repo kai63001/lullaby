@@ -1,4 +1,5 @@
 import express, {Application, Request, Response, NextFunction} from 'express';
+import authRequest from '../../interfaces/auth.ext';
 
 class UsersController {
 
@@ -10,7 +11,7 @@ class UsersController {
   }
 
   public initializeRoutes() {
-    this.router.get('/as', this.getAllUsers);
+    this.router.get('/',authRequest, this.getAllUsers);
   }
 
   private async getAllUsers(

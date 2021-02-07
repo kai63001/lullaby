@@ -21,7 +21,6 @@ class Server {
     
     private app:Application;
     private port:number;
-    // private auth:Auther = new Auther();
 
     constructor(port:number){
         this.app = express();
