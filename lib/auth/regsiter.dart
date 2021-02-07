@@ -17,36 +17,14 @@ class _RegisterState extends State<Register> {
   TextEditingController conpasswordController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
-
     Future register() async {
-      if(passwordController.text != conpasswordController.text){
-        return showDialog<void>(
-          context: context,
-          barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Alert'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Text('Password not match'),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Approve'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-      }else if(usernameController.text.isEmpty || passwordController.text.isEmpty || conpasswordController.text.isEmpty){
-        return buildShowDialog(context,'Please enter username and password');
-      }else{
+      if (passwordController.text != conpasswordController.text) {
+        return buildShowDialog(context, 'Password not match');
+      } else if (usernameController.text.isEmpty ||
+          passwordController.text.isEmpty ||
+          conpasswordController.text.isEmpty) {
+        return buildShowDialog(context, 'Please enter username and password');
+      } else {
         final response = await http.post(
           'http://192.168.33.105:3000/auth/register',
           headers: <String, String>{
@@ -59,37 +37,14 @@ class _RegisterState extends State<Register> {
           }),
         );
         if (response.statusCode == 200) {
-          if(response.body == "username already exit"){
-            return showDialog<void>(
-          context: context,
-          barrierDismissible: false, // user must tap button!
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: Text('Alert'),
-              content: SingleChildScrollView(
-                child: ListBody(
-                  children: <Widget>[
-                    Text('Username already exists'),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Approve'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
-          }else{
+          if (response.body == "username already exit") {
+            return buildShowDialog(context, 'Username already exists');
+          } else {
             Navigator.of(context).pop();
             Navigator.push(
-                      context,
-                      CupertinoPageRoute(builder: (context) => Login()),
-                    );
+              context,
+              CupertinoPageRoute(builder: (context) => Login()),
+            );
           }
 
           print(response.body);
@@ -108,6 +63,7 @@ class _RegisterState extends State<Register> {
       //   throw Exception('Failed to load album');
       // }
     }
+
     final node = FocusScope.of(context);
     return Scaffold(
       backgroundColor: Color(0xff1e1e2a),
@@ -258,5 +214,4 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
-
 }

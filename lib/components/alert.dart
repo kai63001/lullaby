@@ -17,8 +17,20 @@ Future<void> buildShowDialog(BuildContext context, String text) {
                   width: MediaQuery.of(context).size.width * 0.8,
                 ),
               ),
-              Container(
-                child: Text("asd"),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).pop();
+                },
+                child: Container(
+                  decoration: new BoxDecoration(
+                    color: Color(0xff1e1e2a),
+                    borderRadius: BorderRadius.circular(18.0),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Center(child: Text("Close",style: TextStyle(color: Colors.white),)),
+                  ),
+                ),
               )
             ],
           ),
