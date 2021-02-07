@@ -1,8 +1,9 @@
+export {};
 const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-let employee = new Schema(
+let users = new Schema(
   {
     username: {
       type: String
@@ -13,4 +14,4 @@ let employee = new Schema(
   }
 );
 
-module.exports = mongoose.model("users", employee);
+module.exports = mongoose.model("users", users);

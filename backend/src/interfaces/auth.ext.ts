@@ -7,7 +7,7 @@ const jwtOptions = {
    secretOrKey: SECRET
 };
 const jwtAuth = new JwtStrategy(jwtOptions, (payload:any, done:any) => {
-   if (payload.sub) done(null, true);
+   if (payload.username) done(null, true);
    else done(null, false);
 });
 passport.use(jwtAuth);
