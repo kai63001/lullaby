@@ -1,3 +1,5 @@
+import 'package:Lullaby/auth/regsiter.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter/services.dart';
@@ -99,19 +101,27 @@ class _MyHomePageState extends State<MyHomePage> {
             child: Row(
               children: [
                 Expanded(
-                    child: Container(
-                        decoration: new BoxDecoration(
-                          color: Color(0xff1e1e2a),
-                          borderRadius: BorderRadius.circular(18.0),
+                    child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => Register()),
+                    );
+                  },
+                  child: Container(
+                      decoration: new BoxDecoration(
+                        color: Color(0xff1e1e2a),
+                        borderRadius: BorderRadius.circular(18.0),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0),
+                        child: Text(
+                          "Register",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(color: Colors.white),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(18.0),
-                          child: Text(
-                            "Register",
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ))),
+                      )),
+                )),
                 Expanded(
                     child: Container(
                         color: Colors.white,
