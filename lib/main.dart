@@ -1,3 +1,4 @@
+import 'package:Lullaby/auth/login.dart';
 import 'package:Lullaby/auth/regsiter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -60,8 +61,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Container(
         child: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(30),
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(30),
           children: [
             Center(
               child: Image.asset(
@@ -124,12 +125,20 @@ class _MyHomePageState extends State<MyHomePage> {
                       )),
                 )),
                 Expanded(
-                    child: Container(
-                        color: Colors.white,
-                        child: Text(
-                          "Sign in",
-                          textAlign: TextAlign.center,
-                        ))),
+                    child: GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => Login()),
+                    );
+                  },
+                  child: Container(
+                      color: Colors.white,
+                      child: Text(
+                        "Sign in",
+                        textAlign: TextAlign.center,
+                      )),
+                )),
               ],
             ),
           ),

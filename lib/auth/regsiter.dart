@@ -1,4 +1,9 @@
+import 'package:Lullaby/auth/login.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class Register extends StatefulWidget {
   @override
@@ -6,8 +11,125 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController conpasswordController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
+
+    Future register() async {
+      if(passwordController.text != conpasswordController.text){
+        return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Alert'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('Password not match'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Approve'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }else if(usernameController.text.isEmpty || passwordController.text.isEmpty || conpasswordController.text.isEmpty){
+        return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Alert'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('Please enter username and password'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Approve'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }else{
+        final response = await http.post(
+          'http://192.168.33.105:3000/auth/register',
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'username': usernameController.text,
+            'password': passwordController.text,
+            'conpassword': conpasswordController.text
+          }),
+        );
+        if (response.statusCode == 200) {
+          if(response.body == "username already exit"){
+            return showDialog<void>(
+          context: context,
+          barrierDismissible: false, // user must tap button!
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text('Alert'),
+              content: SingleChildScrollView(
+                child: ListBody(
+                  children: <Widget>[
+                    Text('Username already exists'),
+                  ],
+                ),
+              ),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Approve'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+          }else{
+            Navigator.of(context).pop();
+            Navigator.push(
+                      context,
+                      CupertinoPageRoute(builder: (context) => Login()),
+                    );
+          }
+
+          print(response.body);
+          print("end");
+        } else {
+          throw Exception('Failed to load album');
+        }
+      }
+
+      // final response =
+      //     await http.get('https://jsonplaceholder.typicode.com/albums/1');
+
+      // if (response.statusCode == 200) {
+
+      // } else {
+      //   throw Exception('Failed to load album');
+      // }
+    }
     final node = FocusScope.of(context);
     return Scaffold(
       backgroundColor: Color(0xff1e1e2a),
@@ -46,6 +168,7 @@ class _RegisterState extends State<Register> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 15.0, top: 5, bottom: 5),
                 child: TextFormField(
+                  controller: usernameController,
                   onEditingComplete: () => node.nextFocus(),
                   style: TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
@@ -75,6 +198,7 @@ class _RegisterState extends State<Register> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 15.0, top: 5, bottom: 5),
                 child: TextFormField(
+                  controller: passwordController,
                   onEditingComplete: () => node.nextFocus(),
                   enableSuggestions: false,
                   autocorrect: false,
@@ -107,6 +231,7 @@ class _RegisterState extends State<Register> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 15.0, top: 5, bottom: 5),
                 child: TextFormField(
+                  controller: conpasswordController,
                   enableSuggestions: false,
                   autocorrect: false,
                   obscureText: true,
@@ -131,20 +256,25 @@ class _RegisterState extends State<Register> {
       )),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(30.0),
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8,
-          height: MediaQuery.of(context).size.width * 0.15,
-          decoration: new BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(18.0),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Center(
-                child: Text(
-              "Create account",
-              style: TextStyle(color: Colors.black),
-            )),
+        child: GestureDetector(
+          onTap: () {
+            register();
+          },
+          child: Container(
+            width: MediaQuery.of(context).size.width * 0.8,
+            height: MediaQuery.of(context).size.width * 0.15,
+            decoration: new BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(18.0),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Center(
+                  child: Text(
+                "Create account",
+                style: TextStyle(color: Colors.black),
+              )),
+            ),
           ),
         ),
       ),

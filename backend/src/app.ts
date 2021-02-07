@@ -2,6 +2,7 @@ import Controller from "./interfaces/controller.interface";
 const bodyParser = require("body-parser");
 import express, {Application, Request, Response, NextFunction} from 'express';
 import Db from './connection/db'
+const cors = require('cors')
 class App {
   public app: Application;
 
@@ -30,6 +31,7 @@ class App {
   }
 
   private connectToTheDatabase() {
+    this.app.use(cors())
     const Connect = new Db();
   }
 }
