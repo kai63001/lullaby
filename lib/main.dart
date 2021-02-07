@@ -18,7 +18,6 @@ class MyApp extends StatelessWidget {
         fontFamily: 'FredokaOne',
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
-        
       ),
       home: MyHomePage(title: 'Lullaby'),
     );
@@ -45,26 +44,86 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     // FlutterStatusbarcolor.setStatusBarColor(Colors.white);
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.white,
-      systemNavigationBarColor: Colors.white,
-      systemNavigationBarIconBrightness: Brightness.dark
-    ));
+        statusBarColor: Color(0xff1e1e2a),
+        systemNavigationBarColor: Color(0xff1e1e2a),
+        systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Color(0xff1e1e2a),
       appBar: AppBar(
-        brightness: Brightness.light, // status bar brightness
-        backgroundColor: Colors.white,
+        brightness: Brightness.dark, // status bar brightness
+        backgroundColor: Color(0xff1e1e2a),
         centerTitle: true,
-        title: Text(widget.title,style: TextStyle(color: Colors.black),),
+        // title: Text(widget.title,style: TextStyle(color: Colors.white),),
         elevation: 0,
       ),
-      body: ListView(
-        padding: EdgeInsets.only(left:15,right:15,top: 15),
-        children: [
-          TestText()
-        ],
+      body: Container(
+        padding: const EdgeInsets.all(30),
+        child: Column(
+          children: [
+            Center(
+              child: Image.asset(
+                'assets/images/sad.png',
+                height: 300,
+                width: 300,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 18.0),
+              child: Center(
+                  child: Text(
+                "Express yourself freely",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.white, fontSize: 30),
+              )),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 18.0),
+              child: Text(
+                "let me helps you connect to a fun, uplifting, positive, and understanding community, making it easy to share your feelings with people around the world and lift your mood!",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Color(0xff999999)),
+              ),
+            )
+          ],
+        ),
+      ),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.all(30.0),
+        child: Container(
+          decoration: new BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(25.0),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                    child: Container(
+                        decoration: new BoxDecoration(
+                          color: Color(0xff1e1e2a),
+                          borderRadius: BorderRadius.circular(18.0),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(18.0),
+                          child: Text(
+                            "Register",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ))),
+                Expanded(
+                    child: Container(
+                        color: Colors.white,
+                        child: Text(
+                          "Sign in",
+                          textAlign: TextAlign.center,
+                        ))),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 }
-
