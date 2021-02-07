@@ -12,7 +12,6 @@ function loginMiddleWare(req: any, res: Response, next: NextFunction) {
         } else {
             req.userId = result._id;
             next();
-            // res.send(result._id)
         }
     });
 }
