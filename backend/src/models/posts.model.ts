@@ -9,7 +9,7 @@ const posts = new Schema(
       type: String,
     },
     userId: {
-      type: String,
+      type: Object,
     },
     date: {
       type: Number,
