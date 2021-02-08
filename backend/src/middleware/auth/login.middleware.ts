@@ -6,9 +6,7 @@ function loginMiddleWare(req: any, res: Response, next: NextFunction) {
         if (err) {
             res.send(err);
         } else if(!result){
-            res.json({
-                "status":"not found"
-            })
+            res.send("not found")
         } else {
             req.userId = result._id;
             next();
