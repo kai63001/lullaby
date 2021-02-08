@@ -1,9 +1,12 @@
 import 'dart:convert';
 
+import 'package:Lullaby/main/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:Lullaby/components/alert.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
@@ -29,15 +32,18 @@ class _LoginState extends State<Login> {
           }),
         );
         if (response.statusCode == 200) {
-          
+          print(response.body);
           if (response.body == "not found") {
             return buildShowDialog(context, 'Username or Password is incorrect!!');
           } else {
-            
+            SharedPreferences prefs = await SharedPreferences.getInstance();
+            await prefs.setString('token', response.body);
+            String token = (prefs.getString('token') ?? "NONE");
+            print('check token: $token');
+            // Navigator
+            // .of(context)
+            // .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
           }
-
-          print(response.body);
-          print("end");
         } else {
           throw Exception('Failed to load album');
         }
