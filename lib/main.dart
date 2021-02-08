@@ -1,18 +1,31 @@
 import 'package:Lullaby/auth/login.dart';
 import 'package:Lullaby/auth/regsiter.dart';
+import 'package:Lullaby/main/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:flutter/services.dart';
 import 'package:Lullaby/list/test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  
-  runApp(MyApp());
+void main() async {
+    WidgetsFlutterBinding.ensureInitialized(); 
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.getString('token') != null) {
+      runApp(Home());
+    }else{
+      runApp(MyApp());
+    }
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -37,12 +50,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  // String _test = "test";
-  // void _incrementCounter() {
-  //   setState(() {
-  //     _test = "fuck";
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {

@@ -40,9 +40,10 @@ class _LoginState extends State<Login> {
             await prefs.setString('token', response.body);
             String token = (prefs.getString('token') ?? "NONE");
             print('check token: $token');
-            // Navigator
-            // .of(context)
-            // .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
+            Navigator.pop(context);
+            Navigator
+            .of(context)
+            .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
           }
         } else {
           throw Exception('Failed to load album');
