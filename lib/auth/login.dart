@@ -1,13 +1,48 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:Lullaby/components/alert.dart';
+import 'package:http/http.dart' as http;
 class Login extends StatefulWidget {
   @override
   _LoginState createState() => _LoginState();
 }
 
 class _LoginState extends State<Login> {
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
   @override
   Widget build(BuildContext context) {
+    Future login() async {
+      if(usernameController.text.isEmpty || passwordController.text.isEmpty){
+        return buildShowDialog(context, 'Please enter username and password');
+      }else{
+        final response = await http.post(
+          'http://192.168.33.105:3000/auth/login',
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+          },
+          body: jsonEncode(<String, String>{
+            'username': usernameController.text,
+            'password': passwordController.text
+          }),
+        );
+        if (response.statusCode == 200) {
+          
+          if (response.body == "not found") {
+            return buildShowDialog(context, 'Username or Password is incorrect!!');
+          } else {
+            
+          }
+
+          print(response.body);
+          print("end");
+        } else {
+          throw Exception('Failed to load album');
+        }
+      }
+    }
     final node = FocusScope.of(context);
     return Scaffold(
       backgroundColor: Color(0xff1e1e2a),
@@ -46,7 +81,7 @@ class _LoginState extends State<Login> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 15.0, top: 5, bottom: 5),
                 child: TextFormField(
-                  // controller: usernameController,
+                  controller: usernameController,
                   onEditingComplete: () => node.nextFocus(),
                   style: TextStyle(color: Colors.white),
                   decoration: const InputDecoration(
@@ -76,7 +111,7 @@ class _LoginState extends State<Login> {
               child: Padding(
                 padding: const EdgeInsets.only(left: 15.0, top: 5, bottom: 5),
                 child: TextFormField(
-                  // controller: passwordController,
+                  controller: passwordController,
                   onEditingComplete: () => node.nextFocus(),
                   enableSuggestions: false,
                   autocorrect: false,
@@ -104,7 +139,7 @@ class _LoginState extends State<Login> {
         padding: const EdgeInsets.all(30.0),
         child: GestureDetector(
           onTap: () {
-            // register();
+            login();
           },
           child: Container(
             width: MediaQuery.of(context).size.width * 0.8,
@@ -124,6 +159,6 @@ class _LoginState extends State<Login> {
           ),
         ),
       ),
-    );;
+    );
   }
 }
