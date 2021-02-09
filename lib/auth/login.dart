@@ -94,6 +94,7 @@ class _LoginState extends State<Login> {
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     fillColor: Colors.white,
+                    prefixIcon: Icon(CupertinoIcons.person_fill, color: Color(0xffBEBEBE),),
                     hintText: 'Username',
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
                   ),
@@ -128,6 +129,7 @@ class _LoginState extends State<Login> {
                     border: InputBorder.none,
                     fillColor: Colors.white,
                     hintText: 'Password',
+                    prefixIcon: Icon(CupertinoIcons.lock_fill, color: Color(0xffBEBEBE),),
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
                   ),
                   validator: (value) {
@@ -152,7 +154,7 @@ class _LoginState extends State<Login> {
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.08,
             decoration: new BoxDecoration(
-              color: Colors.white,
+              color: Color(0xff854cfd),
               borderRadius: BorderRadius.circular(18.0),
             ),
             child: Padding(
@@ -160,7 +162,7 @@ class _LoginState extends State<Login> {
               child: Center(
                   child: Text(
                 "Sign In",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.white,fontSize: 21),
               )),
             ),
           ),

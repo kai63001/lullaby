@@ -109,6 +109,7 @@ class _RegisterState extends State<Register> {
                     border: InputBorder.none,
                     fillColor: Colors.white,
                     hintText: 'Enter your username',
+                    prefixIcon: Icon(CupertinoIcons.person_fill, color: Color(0xffBEBEBE),),
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
                   ),
                   validator: (value) {
@@ -142,6 +143,7 @@ class _RegisterState extends State<Register> {
                     border: InputBorder.none,
                     fillColor: Colors.white,
                     hintText: 'Password',
+                    prefixIcon: Icon(CupertinoIcons.lock_fill, color: Color(0xffBEBEBE),),
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
                   ),
                   validator: (value) {
@@ -175,6 +177,7 @@ class _RegisterState extends State<Register> {
                     fillColor: Colors.white,
                     hintText: 'Confirm Password',
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
+                    prefixIcon: Icon(CupertinoIcons.lock_fill, color: Color(0xffBEBEBE),),
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
@@ -198,7 +201,7 @@ class _RegisterState extends State<Register> {
             width: MediaQuery.of(context).size.width * 0.8,
             height: MediaQuery.of(context).size.height * 0.08,
             decoration: new BoxDecoration(
-              color: Colors.white,
+              color: Color(0xff854cfd),
               borderRadius: BorderRadius.circular(18.0),
             ),
             child: Padding(
@@ -206,7 +209,7 @@ class _RegisterState extends State<Register> {
               child: Center(
                   child: Text(
                 "Create account",
-                style: TextStyle(color: Colors.black),
+                style: TextStyle(color: Colors.white,fontSize: 21),
               )),
             ),
           ),
