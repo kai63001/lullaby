@@ -11,16 +11,6 @@ class WidgetMain extends StatelessWidget {
     return ListView(
       physics: const BouncingScrollPhysics(),
       children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 8.0),
-          child: Container(
-              padding: EdgeInsets.all(20),
-              color: Color(0xff252736),
-              child: Text(
-                "asdsasda",
-                style: TextStyle(color: Colors.white),
-              )),
-        ),
         for (var item in [1, 2, 3, 4, 5,7,8,9])
           Padding(
             padding: const EdgeInsets.only(bottom: 8.0),
@@ -83,14 +73,6 @@ class WidgetMain extends StatelessWidget {
                                 ],
                               ),
                             ),
-                            // Padding(
-                            //   padding: const EdgeInsets.only(left: 10.0),
-                            //   child: Text(
-                            //         "is Sad",
-                            //         style: TextStyle(
-                            //             color: Colors.white, fontSize: 18),
-                            //       ),
-                            // ),
                           ],
                         ),
                         Icon(
