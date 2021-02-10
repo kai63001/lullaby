@@ -41,19 +41,19 @@ class _MyHomePageState extends State<MyHomePage> {
   List<Widget> _widgetOptions = <Widget>[
     WidgetMain(),
     Text(
-      'Index 1: Businessss',
+      'Index 1: search',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'Index 2: add',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'Index 2: notif',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'Index 2: profile',
       style: optionStyle,
     ),
   ];
@@ -126,25 +126,25 @@ class _MyHomePageState extends State<MyHomePage> {
             icon: _selectedIndex == 1
                 ? Icon(CupertinoIcons.search)
                 : Icon(CupertinoIcons.search),
-            label: 'search',
+            label: 'Search',
           ),
           BottomNavigationBarItem(
             icon: _selectedIndex == 2
                 ? Icon(CupertinoIcons.plus)
                 : Icon(CupertinoIcons.plus),
-            label: 'add',
+            label: 'Express your self',
           ),
           BottomNavigationBarItem(
             icon: _selectedIndex == 3
                 ? Icon(CupertinoIcons.bell_fill)
                 : Icon(CupertinoIcons.bell),
-            label: 'notification',
+            label: 'Notification',
           ),
           BottomNavigationBarItem(
             icon: _selectedIndex == 4
                 ? Icon(CupertinoIcons.person_fill)
                 : Icon(CupertinoIcons.person),
-            label: 'profile',
+            label: 'Profile',
           ),
         ],
         unselectedItemColor: Color(0xff4f4e5d),
