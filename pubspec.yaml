@@ -50,6 +50,7 @@ flutter:
   assets:
     - assets/images/sad.png
     - assets/images/alert.png
+    - assets/images/avatars/monster.png
   #  fonts:
   #   - family: FredokaOne
   #     fonts:
