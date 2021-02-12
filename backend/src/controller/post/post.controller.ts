@@ -52,7 +52,7 @@ class UsersController {
           nowImage: 0,
         },
       },
-    ]).exec();
+    ]).sort({date: 'desc'}).exec();
     res.json(apr);
   }
 
