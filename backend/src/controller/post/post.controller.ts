@@ -18,6 +18,7 @@ class UsersController {
     this.router.post("/post", authRequest, this.insertPost);
     this.router.get("/post/like/:id", authRequest, this.likeFrist);
     this.router.get("/post/like/:id/update", authRequest, this.updateLikePost);
+    this.router.get("/post/unlike/:id", authRequest, this.disLike);
   }
 
   private async getAllPost(req: Request, res: Response, next: NextFunction) {
@@ -99,7 +100,7 @@ class UsersController {
   private updateLikePost(req: Request, res: Response): void {
     const usertoken = req.headers.authorization;
     const decoded = jwt.decode(usertoken, "shadow");
-    Likes.findOneAndUpdate(
+    Likes.updateOne(
       { postId: mongoose.Types.ObjectId(req.params.id) },
       { $push: { users: [mongoose.Types.ObjectId(decoded.id)] } },
       function (error: any, success: any) {
@@ -111,6 +112,25 @@ class UsersController {
       }
     );
   }
+
+  private disLike(req: Request, res: Response): void {
+    const usertoken = req.headers.authorization;
+    const decoded = jwt.decode(usertoken, "shadow");
+    Likes.updateOne(
+      { postId: mongoose.Types.ObjectId(req.params.id) },
+      { $pullAll: { users: [mongoose.Types.ObjectId(decoded.id)] } },
+      function (error: any, success: any) {
+        if (error) {
+          res.send(error);
+        } else {
+          res.send("unlike success");
+        }
+      }
+    );
+  }
+
+
+
 }
 
 export default UsersController;
