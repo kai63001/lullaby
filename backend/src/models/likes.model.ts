@@ -6,11 +6,13 @@ const Schema = mongoose.Schema;
 const likes = new Schema(
   {
       postId :{
-          type: String
+          type: Object
       },
-      userId : {
-          type: String
-      }
+      users : [
+          {
+                type: Object
+            }
+      ]
   }
 );
 
