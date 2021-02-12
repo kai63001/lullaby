@@ -10,7 +10,7 @@ class db {
         console.log("connecting")
         var uri = "mongodb+srv://lullaby:Lay@22331@cluster0.80apm.mongodb.net/lullaby?retryWrites=true&w=majority";
 
-        mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true });
+        mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true ,useFindAndModify: false,useCreateIndex:true});
 
         const connection = mongoose.connection;
 
