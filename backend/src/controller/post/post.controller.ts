@@ -2,6 +2,7 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import authRequest from "../../interfaces/auth.ext";
 const Posts = require("../../models/posts.model");
 const Likes = require("../../models/likes.model");
+const Comments = require("../../models/comments.model");
 const jwt = require("jwt-simple");
 const mongoose = require("mongoose");
 
@@ -19,14 +20,21 @@ class UsersController {
     this.router.get("/post/like/:id", authRequest, this.likeFrist);
     this.router.get("/post/like/:id/update", authRequest, this.updateLikePost);
     this.router.get("/post/unlike/:id", authRequest, this.disLike);
+    this.router.post("/post/:id/comment", authRequest, this.comment);
+    this.router.post("/post/:id/comment/add", authRequest, this.commentAdd);
+    this.router.delete(
+      "/post/:id/comment/delete",
+      authRequest,
+      this.commentDelete
+    );
   }
 
   private async getAllPost(req: Request, res: Response, next: NextFunction) {
-    const perPage:number = 2;
-    const page: string = (req.query.page as string) || (Date.now().toString());
+    const perPage: number = 2;
+    const page: string = (req.query.page as string) || Date.now().toString();
 
     const apr = await Posts.aggregate([
-      { $match: { date: { $lte: parseInt(page)-1 } } },
+      { $match: { date: { $lte: parseInt(page) - 1 } } },
       { $sort: { date: -1 } },
       {
         $lookup: {
@@ -64,8 +72,8 @@ class UsersController {
       },
       {
         $addFields: {
-          haveLike: { $size: '$likes' },
-          haveComment: { $size: '$comments' }
+          haveLike: { $size: "$likes" },
+          haveComment: { $size: "$comments" },
         },
       },
       {
@@ -150,10 +158,79 @@ class UsersController {
     );
   }
 
-  private commentCoun(req: Request, res: Response): void {
-
+  private comment(req: Request, res: Response): void {
+    const usertoken = req.headers.authorization;
+    const decoded = jwt.decode(usertoken, "shadow");
+    Comments.insertMany(
+      [
+        {
+          postId: mongoose.Types.ObjectId(req.params.id),
+          comments: [
+            {
+              userId: mongoose.Types.ObjectId(decoded.id),
+              comment: req.body.comment,
+            },
+          ],
+        },
+      ],
+      (_err: any) => {
+        if (_err) {
+          console.log(_err);
+        } else {
+          res.send("comment success");
+        }
+      }
+    );
   }
 
+  private commentAdd(req: Request, res: Response): void {
+    const usertoken = req.headers.authorization;
+    const decoded = jwt.decode(usertoken, "shadow");
+    Comments.updateOne(
+      { postId: mongoose.Types.ObjectId(req.params.id) },
+      {
+        $push: {
+          comments: [
+            {
+              userId: mongoose.Types.ObjectId(decoded.id),
+              comment: req.body.comment,
+            },
+          ],
+        },
+      },
+      function (error: any, success: any) {
+        if (error) {
+          res.send(error);
+        } else {
+          res.send("comment add success");
+        }
+      }
+    );
+  }
+
+  private commentDelete(req: Request, res: Response): void {
+    Comments.updateOne(
+      { postId: mongoose.Types.ObjectId(req.params.id) },
+      {
+        $pullAll: {
+          comments: [
+            {
+              _id: mongoose.Types.ObjectId(req.body.id),
+              userId: mongoose.Types.ObjectId(req.body.userId),
+              comment: req.body.comment,
+            },
+          ],
+        },
+      },
+      function (error: any, success: any) {
+        if (error) {
+          res.send(error);
+        } else {
+          res.send("delete comment success");
+        }
+      }
+    );
+  }
 }
 
 export default UsersController;

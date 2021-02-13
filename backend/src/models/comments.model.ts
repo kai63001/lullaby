@@ -3,16 +3,19 @@ const mongoose = require("mongoose");
 
 const Schema = mongoose.Schema;
 
-const likes = new Schema({
+const comments = new Schema({
   postId: {
     type: Object,
   },
   comments: [
     {
-      userId : Object,
-      comment : String
+      userId: Object,
+      comment: String,
     },
   ],
+  date: {
+    type: Number,
+  },
 });
 
-module.exports = mongoose.model("likes", likes);
+module.exports = mongoose.model("comments", comments);
