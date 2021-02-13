@@ -30,7 +30,7 @@ class UsersController {
   }
 
   private async getAllPost(req: Request, res: Response, next: NextFunction) {
-    const perPage: number = 2;
+    const perPage: number = parseInt(req.query.limit as string) || 8;
     const page: string = (req.query.page as string) || Date.now().toString();
 
     const apr = await Posts.aggregate([
