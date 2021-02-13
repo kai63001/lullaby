@@ -169,6 +169,7 @@ class UsersController {
             {
               userId: mongoose.Types.ObjectId(decoded.id),
               comment: req.body.comment,
+              date: Date.now()
             },
           ],
         },
@@ -194,6 +195,7 @@ class UsersController {
             {
               userId: mongoose.Types.ObjectId(decoded.id),
               comment: req.body.comment,
+              date: Date.now()
             },
           ],
         },
@@ -218,6 +220,7 @@ class UsersController {
               _id: mongoose.Types.ObjectId(req.body.id),
               userId: mongoose.Types.ObjectId(req.body.userId),
               comment: req.body.comment,
+              date: req.body.date
             },
           ],
         },

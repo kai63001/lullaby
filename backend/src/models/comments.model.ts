@@ -11,11 +11,9 @@ const comments = new Schema({
     {
       userId: Object,
       comment: String,
+      date: Number
     },
   ],
-  date: {
-    type: Number,
-  },
 });
 
 module.exports = mongoose.model("comments", comments);
