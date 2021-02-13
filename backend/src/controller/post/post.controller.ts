@@ -22,7 +22,12 @@ class UsersController {
   }
 
   private async getAllPost(req: Request, res: Response, next: NextFunction) {
+    const perPage = 2;
+    const page: string = (req.query.page as string) || (Date.now().toString());
+
     const apr = await Posts.aggregate([
+      { $match: { date: { $lte: parseInt(page)-1 } } },
+      { $sort: { date: -1 } },
       {
         $lookup: {
           from: "users", // collection name in db
@@ -52,7 +57,12 @@ class UsersController {
           nowImage: 0,
         },
       },
-    ]).sort({date: 'desc'}).exec();
+      {
+        $facet: {
+          data: [{ $limit: perPage }],
+        },
+      },
+    ]).exec();
     res.json(apr);
   }
 
@@ -128,9 +138,6 @@ class UsersController {
       }
     );
   }
-
-
-
 }
 
 export default UsersController;
