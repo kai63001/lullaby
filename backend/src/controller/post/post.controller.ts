@@ -211,6 +211,8 @@ class UsersController {
   }
 
   private commentDelete(req: Request, res: Response): void {
+    const usertoken = req.headers.authorization;
+    const decoded = jwt.decode(usertoken, "shadow");
     Comments.updateOne(
       { postId: mongoose.Types.ObjectId(req.params.id) },
       {
@@ -218,7 +220,7 @@ class UsersController {
           comments: [
             {
               _id: mongoose.Types.ObjectId(req.body.id),
-              userId: mongoose.Types.ObjectId(req.body.userId),
+              userId: mongoose.Types.ObjectId(decoded.id),
               comment: req.body.comment,
               date: req.body.date
             },
