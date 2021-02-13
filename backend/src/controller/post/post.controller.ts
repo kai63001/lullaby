@@ -54,7 +54,7 @@ class UsersController {
       },
       {
         $addFields: {
-          nowImage: 0,
+          haveLike: { $size: '$likes' }
         },
       },
       {
