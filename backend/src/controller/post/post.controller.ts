@@ -45,16 +45,27 @@ class UsersController {
         },
       },
       {
+        $lookup: {
+          from: "comments", // collection name in db
+          localField: "_id",
+          foreignField: "postId",
+          as: "comments",
+        },
+      },
+      {
         $project: {
           "users._id": 0,
           "users.password": 0,
           "likes._id": 0,
           "likes.postId": 0,
+          "comments.postId": 0,
+          "comments._id": 0,
         },
       },
       {
         $addFields: {
-          haveLike: { $size: '$likes' }
+          haveLike: { $size: '$likes' },
+          haveComment: { $size: '$comments' }
         },
       },
       {
@@ -138,6 +149,11 @@ class UsersController {
       }
     );
   }
+
+  private commentCoun(req: Request, res: Response): void {
+
+  }
+
 }
 
 export default UsersController;
