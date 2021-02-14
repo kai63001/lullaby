@@ -18,6 +18,12 @@ class _WidgetMainState extends State<WidgetMain> {
   List data;
   String myUserId;
   Map<String, dynamic> decodedToken;
+  bool containsComment(Object element,String userId) {
+    for (var item in element) {
+      if (item["userId"] == userId) return true;
+    }
+    return false;
+  }
   Future<String> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http
@@ -30,10 +36,10 @@ class _WidgetMainState extends State<WidgetMain> {
 
     this.setState(() {
       data = jsonDecode(response.body);
-      
+      data = data[0]["data"];
       decodedToken = JwtDecoder.decode(prefs.getString("token"));
     });
-    // print(decodedToken);
+    print(decodedToken);
 
 
     return "Success!";
@@ -161,13 +167,13 @@ class _WidgetMainState extends State<WidgetMain> {
                         child: Row(
                       children: [
                         Icon(
-                          CupertinoIcons.chat_bubble,
-                          color: Colors.white30,
+                          data["comments"].length > 0?(containsComment(data["comments"],decodedToken["id"]) ? CupertinoIcons.chat_bubble_fill:CupertinoIcons.chat_bubble):CupertinoIcons.chat_bubble,
+                          color: data["comments"].length > 0?(containsComment(data["comments"],decodedToken["id"]) ? Color(0xff7246ff):Colors.white30): Colors.white30,
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                            " 24",
+                            " "+(data["comments"].length > 0?data["comments"].length:"").toString(),
                             style: TextStyle(color: Colors.white30),
                           ),
                         )
