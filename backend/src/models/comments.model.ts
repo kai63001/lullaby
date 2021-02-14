@@ -7,13 +7,22 @@ const comments = new Schema({
   postId: {
     type: Object,
   },
-  comments: [
-    {
-      userId: Object,
-      comment: String,
-      date: Number
-    },
-  ],
+  userId: {
+    type: Object,
+  },
+  comment: {
+    type: String
+  },
+  date: {
+    type: Number
+  }
+  // comments: [
+  //   {
+  //     userId: Object,
+  //     comment: String,
+  //     date: Number
+  //   },
+  // ],
 });
 
 module.exports = mongoose.model("comments", comments);

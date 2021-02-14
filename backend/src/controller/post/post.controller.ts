@@ -20,6 +20,7 @@ class UsersController {
     this.router.get("/post/like/:id", authRequest, this.likeFrist);
     this.router.get("/post/like/:id/update", authRequest, this.updateLikePost);
     this.router.get("/post/unlike/:id", authRequest, this.disLike);
+    this.router.get("/post/:id/comment", authRequest, this.commentList);
     this.router.post("/post/:id/comment", authRequest, this.comment);
     this.router.post("/post/:id/comment/add", authRequest, this.commentAdd);
     this.router.delete(
@@ -165,13 +166,16 @@ class UsersController {
       [
         {
           postId: mongoose.Types.ObjectId(req.params.id),
-          comments: [
-            {
-              userId: mongoose.Types.ObjectId(decoded.id),
-              comment: req.body.comment,
-              date: Date.now()
-            },
-          ],
+          userId: mongoose.Types.ObjectId(decoded.id),
+          comment: req.body.comment,
+          date: Date.now()
+          // comments: [
+          //   {
+          //     userId: mongoose.Types.ObjectId(decoded.id),
+          //     comment: req.body.comment,
+          //     date: Date.now()
+          //   },
+          // ],
         },
       ],
       (_err: any) => {
@@ -185,57 +189,65 @@ class UsersController {
   }
 
   private commentAdd(req: Request, res: Response): void {
-    const usertoken = req.headers.authorization;
-    const decoded = jwt.decode(usertoken, "shadow");
-    Comments.updateOne(
-      { postId: mongoose.Types.ObjectId(req.params.id) },
-      {
-        $push: {
-          comments: [
-            {
-              userId: mongoose.Types.ObjectId(decoded.id),
-              comment: req.body.comment,
-              date: Date.now()
-            },
-          ],
-        },
-      },
-      function (error: any, success: any) {
-        if (error) {
-          res.send(error);
-        } else {
-          res.send("comment add success");
-        }
-      }
-    );
+    // const usertoken = req.headers.authorization;
+    // const decoded = jwt.decode(usertoken, "shadow");
+    // Comments.updateOne(
+    //   { postId: mongoose.Types.ObjectId(req.params.id) },
+    //   {
+    //     $push: {
+    //       comments: [
+    //         {
+    //           userId: mongoose.Types.ObjectId(decoded.id),
+    //           comment: req.body.comment,
+    //           date: Date.now()
+    //         },
+    //       ],
+    //     },
+    //   },
+    //   function (error: any, success: any) {
+    //     if (error) {
+    //       res.send(error);
+    //     } else {
+    //       res.send("comment add success");
+    //     }
+    //   }
+    // );
   }
 
   private commentDelete(req: Request, res: Response): void {
     const usertoken = req.headers.authorization;
     const decoded = jwt.decode(usertoken, "shadow");
-    Comments.updateOne(
-      { postId: mongoose.Types.ObjectId(req.params.id) },
+    Comments.deleteOne({ _id: mongoose.Types.ObjectId(req.body.id),userId: mongoose.Types.ObjectId(decoded.id) }, function (err: any) {
+      if(err) {
+        res.send("err")
+      }else{
+        res.send("delete success");
+      }
+    });
+  }
+  
+  private async commentList(req:Request, res:Response) {
+    const apr = await Comments.aggregate([
+      { $match: { postId: { $eq:  mongoose.Types.ObjectId(req.params.id) } } },
+      { $sort: { date: -1 } },
       {
-        $pullAll: {
-          comments: [
-            {
-              _id: mongoose.Types.ObjectId(req.body.id),
-              userId: mongoose.Types.ObjectId(decoded.id),
-              comment: req.body.comment,
-              date: req.body.date
-            },
-          ],
+        $lookup: {
+          from: "users", // collection name in db
+          localField: "userId",
+          foreignField: "_id",
+          as: "users",
         },
       },
-      function (error: any, success: any) {
-        if (error) {
-          res.send(error);
-        } else {
-          res.send("delete comment success");
-        }
-      }
-    );
+      {
+        $project: {
+          "users._id": 0,
+          "users.password": 0,
+        },
+      },
+    ]).exec();
+    res.json(apr);
   }
+
 }
 
 export default UsersController;
