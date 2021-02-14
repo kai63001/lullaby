@@ -109,7 +109,11 @@ class _MyHomePageState extends State<MyHomePage> {
               onPressed: () {},
             ),
           ]),
-      body: _widgetOptions.elementAt(_selectedIndex),
+      // body: _widgetOptions.elementAt(_selectedIndex),
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _widgetOptions,
+      ),
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
