@@ -19,12 +19,13 @@ class _WidgetMainState extends State<WidgetMain> {
   List data;
   String myUserId;
   Map<String, dynamic> decodedToken;
-  bool containsComment(Object element,String userId) {
+  bool containsComment(Object element, String userId) {
     for (var item in element) {
       if (item["userId"] == userId) return true;
     }
     return false;
   }
+
   Future<String> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http
@@ -33,7 +34,7 @@ class _WidgetMainState extends State<WidgetMain> {
       "authorization": prefs.getString("token")
     });
 
-    print("token : "+prefs.getString("token"));
+    print("token : " + prefs.getString("token"));
 
     this.setState(() {
       data = jsonDecode(response.body);
@@ -42,7 +43,6 @@ class _WidgetMainState extends State<WidgetMain> {
     });
     print(decodedToken);
     print("getData on procress");
-
 
     return "Success!";
   }
@@ -62,17 +62,49 @@ class _WidgetMainState extends State<WidgetMain> {
     //     for (var item in [1, 2, 3, 4, 5, 7, 8, 9]) buildCard(),
     //   ],
     // );
-    return data != null ? RefreshIndicator(
-          // ignore: missing_return
-          onRefresh: getData,
-          child: new ListView.builder(
-          physics: const BouncingScrollPhysics(),
-          itemCount: data == null ? 0 : data.length,
-          itemBuilder: (BuildContext context, int index){
-            return buildCard(data[index]);
-          }
-      ),
-    ) : Center(child: CircularProgressIndicator());
+    return data != null
+        ? RefreshIndicator(
+            // ignore: missing_return
+            onRefresh: getData,
+            child: new ListView.builder(
+                // physics: const BouncingScrollPhysics(),
+                itemCount: data == null ? 0 : data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index == 0) {
+                    return Column(
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width,
+                          decoration: new BoxDecoration(
+                            color: Color(0xff0B0B0F)
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 12, left: 20, right: 15, bottom: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(Icons.fiber_new_rounded ,color: Colors.white,),
+                                    Text(" NEW POSTS ",style: TextStyle(color: Colors.white,fontSize:12)),
+                                    Icon(Icons.keyboard_arrow_down_rounded  ,color: Colors.white,),
+                                  ],
+                                ),
+                                Icon(Icons.apps_sharp  ,color: Colors.white,),
+                              ],
+                            ),
+                          )),
+                        Container(
+                          child: buildCard(data[index]),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return buildCard(data[index]);
+                  }
+                }),
+          )
+        : Center(child: CircularProgressIndicator());
   }
 
   Padding buildCard(data) {
@@ -100,7 +132,9 @@ class _WidgetMainState extends State<WidgetMain> {
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: Image.asset(
-                                'assets/images/avatars/monster.png'),
+                                data["users"][0]["avatar"] == null
+                                    ? 'assets/images/avatars/monster.png'
+                                    : data["users"][0]["avatar"]),
                           )),
                       Padding(
                         padding: const EdgeInsets.only(left: 10.0),
@@ -115,7 +149,9 @@ class _WidgetMainState extends State<WidgetMain> {
                             Row(
                               children: [
                                 Text(
-                                  moment.from(new DateTime.fromMillisecondsSinceEpoch(data["date"])),
+                                  moment.from(
+                                      new DateTime.fromMillisecondsSinceEpoch(
+                                          data["date"])),
                                   style: TextStyle(
                                       color: Colors.white54, fontSize: 12),
                                 ),
@@ -125,7 +161,7 @@ class _WidgetMainState extends State<WidgetMain> {
                                       color: Colors.white54, fontSize: 12),
                                 ),
                                 Text(
-                                  "Sad",
+                                  data["feel"] == null ? 'sad' : data["feel"],
                                   style: TextStyle(
                                       color: Colors.redAccent, fontSize: 12),
                                 ),
@@ -158,13 +194,29 @@ class _WidgetMainState extends State<WidgetMain> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Icon(
-                          data["likes"].length > 0?(data["likes"][0]["users"].contains(decodedToken["id"]) ? CupertinoIcons.heart_fill:CupertinoIcons.heart): CupertinoIcons.heart,
-                          color: data["likes"].length > 0?(data["likes"][0]["users"].contains(decodedToken["id"]) ? Color(0xfff73f71):Colors.white30): Colors.white30,
+                          data["likes"].length > 0
+                              ? (data["likes"][0]["users"]
+                                      .contains(decodedToken["id"])
+                                  ? CupertinoIcons.heart_fill
+                                  : CupertinoIcons.heart)
+                              : CupertinoIcons.heart,
+                          color: data["likes"].length > 0
+                              ? (data["likes"][0]["users"]
+                                      .contains(decodedToken["id"])
+                                  ? Color(0xfff73f71)
+                                  : Colors.white30)
+                              : Colors.white30,
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                            ' '+(data["likes"].length > 0?(data["likes"][0]["users"].length == 0?"":data["likes"][0]["users"].length):"").toString(),
+                            ' ' +
+                                (data["likes"].length > 0
+                                        ? (data["likes"][0]["users"].length == 0
+                                            ? ""
+                                            : data["likes"][0]["users"].length)
+                                        : "")
+                                    .toString(),
                             style: TextStyle(color: Colors.white30),
                           ),
                         )
@@ -174,13 +226,27 @@ class _WidgetMainState extends State<WidgetMain> {
                         child: Row(
                       children: [
                         Icon(
-                          data["comments"].length > 0?(containsComment(data["comments"],decodedToken["id"]) ? CupertinoIcons.chat_bubble_fill:CupertinoIcons.chat_bubble):CupertinoIcons.chat_bubble,
-                          color: data["comments"].length > 0?(containsComment(data["comments"],decodedToken["id"]) ? Color(0xff7246ff):Colors.white30): Colors.white30,
+                          data["comments"].length > 0
+                              ? (containsComment(
+                                      data["comments"], decodedToken["id"])
+                                  ? CupertinoIcons.chat_bubble_fill
+                                  : CupertinoIcons.chat_bubble)
+                              : CupertinoIcons.chat_bubble,
+                          color: data["comments"].length > 0
+                              ? (containsComment(
+                                      data["comments"], decodedToken["id"])
+                                  ? Color(0xff7246ff)
+                                  : Colors.white30)
+                              : Colors.white30,
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                            " "+(data["comments"].length > 0?data["comments"].length:"").toString(),
+                            " " +
+                                (data["comments"].length > 0
+                                        ? data["comments"].length
+                                        : "")
+                                    .toString(),
                             style: TextStyle(color: Colors.white30),
                           ),
                         )

@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
       theme: ThemeData(
         splashColor: Colors.transparent,
         fontFamily: 'FredokaOne',
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.deepPurple,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
       home: MyHomePage(title: 'Lullaby'),
