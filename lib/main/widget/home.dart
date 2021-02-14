@@ -47,6 +47,44 @@ class _WidgetMainState extends State<WidgetMain> {
     return "Success!";
   }
 
+  Future likeSystem(int index) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    decodedToken = JwtDecoder.decode(prefs.getString("token"));
+    String postId = data[index]["_id"];
+    if(data[index]["likes"].length == 0){
+      setState(() {
+        data[index]["likes"].add({"users":[]});
+        data[index]["likes"][0]["users"].add(decodedToken["id"]);
+      });
+      var response = await http
+          .get(Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId"), headers: {
+        "Accept": "application/json",
+        "authorization": prefs.getString("token")
+      });
+    }else if(data[index]["likes"][0]["users"].contains(decodedToken["id"])){
+      setState(() {
+          data[index]["likes"][0]["users"].removeAt(data[index]["likes"][0]["users"].indexOf(decodedToken["id"]));
+      });
+      var response = await http
+          .get(Uri.encodeFull("http://192.168.33.105:3000/post/unlike/$postId"), headers: {
+        "Accept": "application/json",
+        "authorization": prefs.getString("token")
+      });
+    }else{
+      setState(() {
+        data[index]["likes"][0]["users"].add(decodedToken["id"]);
+      });
+      var response = await http
+          .get(Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId/update"), headers: {
+        "Accept": "application/json",
+        "authorization": prefs.getString("token")
+      });
+    }
+
+    print(data[index]["likes"][0]["users"]);
+    print(data[index]["likes"][0]["users"].contains(decodedToken["id"]));
+  }
+
   @override
   void initState() {
     super.initState();
@@ -74,40 +112,53 @@ class _WidgetMainState extends State<WidgetMain> {
                     return Column(
                       children: [
                         Container(
-                          width: MediaQuery.of(context).size.width,
-                          decoration: new BoxDecoration(
-                            color: Color(0xff0B0B0F)
-                          ),
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 12, left: 20, right: 15, bottom: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.fiber_new_rounded ,color: Colors.white,),
-                                    Text(" NEW POSTS ",style: TextStyle(color: Colors.white,fontSize:12)),
-                                    Icon(Icons.keyboard_arrow_down_rounded  ,color: Colors.white,),
-                                  ],
-                                ),
-                                Icon(Icons.apps_sharp  ,color: Colors.white,),
-                              ],
-                            ),
-                          )),
+                            width: MediaQuery.of(context).size.width,
+                            decoration:
+                                new BoxDecoration(color: Color(0xff0B0B0F)),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  top: 12, left: 20, right: 15, bottom: 12),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.fiber_new_rounded,
+                                        color: Colors.white,
+                                      ),
+                                      Text(" NEW POSTS ",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12)),
+                                      Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        color: Colors.white,
+                                      ),
+                                    ],
+                                  ),
+                                  Icon(
+                                    Icons.apps_sharp,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
+                            )),
                         Container(
-                          child: buildCard(data[index]),
+                          child: buildCard(data[index],index),
                         ),
                       ],
                     );
                   } else {
-                    return buildCard(data[index]);
+                    return buildCard(data[index],index);
                   }
                 }),
           )
         : Center(child: CircularProgressIndicator());
   }
 
-  Padding buildCard(data) {
+  Padding buildCard(data,i) {
     var moment = Moment.now();
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
@@ -190,37 +241,47 @@ class _WidgetMainState extends State<WidgetMain> {
                 child: Row(
                   children: [
                     Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            likeSystem(i);
+                          },
+                      child: Container(
+                        color: Color(0xff252736),
                         child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(
-                          data["likes"].length > 0
-                              ? (data["likes"][0]["users"]
-                                      .contains(decodedToken["id"])
-                                  ? CupertinoIcons.heart_fill
-                                  : CupertinoIcons.heart)
-                              : CupertinoIcons.heart,
-                          color: data["likes"].length > 0
-                              ? (data["likes"][0]["users"]
-                                      .contains(decodedToken["id"])
-                                  ? Color(0xfff73f71)
-                                  : Colors.white30)
-                              : Colors.white30,
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Icon(
+                              data["likes"].length > 0
+                                  ? (data["likes"][0]["users"]
+                                          .contains(decodedToken["id"])
+                                      ? CupertinoIcons.heart_fill
+                                      : CupertinoIcons.heart)
+                                  : CupertinoIcons.heart,
+                              color: data["likes"].length > 0
+                                  ? (data["likes"][0]["users"]
+                                          .contains(decodedToken["id"])
+                                      ? Color(0xfff73f71)
+                                      : Colors.white30)
+                                  : Colors.white30,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text(
+                                ' ' +
+                                    (data["likes"].length > 0
+                                            ? (data["likes"][0]["users"].length ==
+                                                    0
+                                                ? ""
+                                                : data["likes"][0]["users"]
+                                                    .length)
+                                            : "")
+                                        .toString(),
+                                style: TextStyle(color: Colors.white30),
+                              ),
+                            )
+                          ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5.0),
-                          child: Text(
-                            ' ' +
-                                (data["likes"].length > 0
-                                        ? (data["likes"][0]["users"].length == 0
-                                            ? ""
-                                            : data["likes"][0]["users"].length)
-                                        : "")
-                                    .toString(),
-                            style: TextStyle(color: Colors.white30),
-                          ),
-                        )
-                      ],
+                      ),
                     )),
                     Expanded(
                         child: Row(
