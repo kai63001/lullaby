@@ -94,6 +94,7 @@ class UsersController {
         {
           title: req.body.title,
           userId: mongoose.Types.ObjectId(decoded.id),
+          feel: req.body.feel,
           date: Date.now(),
         },
       ],
