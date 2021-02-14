@@ -10,7 +10,11 @@ let users = new Schema(
     },
     password: {
       type: String
+    },
+    avatar: {
+      type : {type: String , default: 'assets/images/avatars/monster.png'}
     }
+
   }
 );
 

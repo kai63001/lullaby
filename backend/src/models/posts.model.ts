@@ -11,6 +11,9 @@ const posts = new Schema(
     userId: {
       type: Object,
     },
+    feel : {
+      type: { type: String, default: 'sad' }
+    },
     date: {
       type: Number,
     }
