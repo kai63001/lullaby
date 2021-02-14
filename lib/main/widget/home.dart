@@ -4,6 +4,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:simple_moment/simple_moment.dart';
 
 class WidgetMain extends StatefulWidget {
   const WidgetMain({
@@ -40,6 +41,7 @@ class _WidgetMainState extends State<WidgetMain> {
       decodedToken = JwtDecoder.decode(prefs.getString("token"));
     });
     print(decodedToken);
+    print("getData on procress");
 
 
     return "Success!";
@@ -60,16 +62,21 @@ class _WidgetMainState extends State<WidgetMain> {
     //     for (var item in [1, 2, 3, 4, 5, 7, 8, 9]) buildCard(),
     //   ],
     // );
-    return new ListView.builder(
-        physics: const BouncingScrollPhysics(),
-        itemCount: data == null ? 0 : data.length,
-        itemBuilder: (BuildContext context, int index){
-          return buildCard(data[index]);
-        }
-    );
+    return data != null ? RefreshIndicator(
+          // ignore: missing_return
+          onRefresh: getData,
+          child: new ListView.builder(
+          physics: const BouncingScrollPhysics(),
+          itemCount: data == null ? 0 : data.length,
+          itemBuilder: (BuildContext context, int index){
+            return buildCard(data[index]);
+          }
+      ),
+    ) : Center(child: CircularProgressIndicator());
   }
 
   Padding buildCard(data) {
+    var moment = Moment.now();
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Container(
@@ -108,7 +115,7 @@ class _WidgetMainState extends State<WidgetMain> {
                             Row(
                               children: [
                                 Text(
-                                  "10 hours ago",
+                                  moment.from(new DateTime.fromMillisecondsSinceEpoch(data["date"])),
                                   style: TextStyle(
                                       color: Colors.white54, fontSize: 12),
                                 ),
@@ -157,7 +164,7 @@ class _WidgetMainState extends State<WidgetMain> {
                         Padding(
                           padding: const EdgeInsets.only(top: 5.0),
                           child: Text(
-                            ' '+(data["likes"].length > 0?data["likes"][0]["users"].length:"").toString(),
+                            ' '+(data["likes"].length > 0?(data["likes"][0]["users"].length == 0?"":data["likes"][0]["users"].length):"").toString(),
                             style: TextStyle(color: Colors.white30),
                           ),
                         )

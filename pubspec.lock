@@ -226,6 +226,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.0.2+3"
+  simple_moment:
+    dependency: "direct main"
+    description:
+      name: simple_moment
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.7"
   sky_engine:
     dependency: transitive
     description: flutter
