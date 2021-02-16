@@ -27,6 +27,21 @@ class _WidgetMainState extends State<WidgetMain> {
     return false;
   }
 
+  _showPopupMenu(Offset offset) {
+    print("showmenu");
+    double left = offset.dx;
+    double top = offset.dy;
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(left, top, 0, 0),
+      items: [
+        PopupMenuItem<String>(child: const Text('Delete'), value: 'Delete'),
+        // PopupMenuItem<String>(child: const Text('Lion'), value: 'Lion'),
+      ],
+      elevation: 8.0,
+    );
+  }
+
   Future<String> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http
@@ -187,7 +202,8 @@ class _WidgetMainState extends State<WidgetMain> {
                                         topRight: Radius.circular(30),
                                       )),
                                   child: Padding(
-                                    padding: const EdgeInsets.only(top:20.0,left:20,right: 20),
+                                    padding: const EdgeInsets.only(
+                                        top: 20.0, left: 20, right: 20),
                                     child: GridView.builder(
                                       controller: scrollController,
                                       itemCount: 25,
@@ -196,7 +212,7 @@ class _WidgetMainState extends State<WidgetMain> {
                                         return Padding(
                                           padding: const EdgeInsets.all(10),
                                           child: Container(
-                                            color: Colors.white,
+                                              color: Colors.white,
                                               child: Text('$index')),
                                         );
                                       },
@@ -285,9 +301,20 @@ class _WidgetMainState extends State<WidgetMain> {
                         ),
                       ],
                     ),
-                    Icon(
-                      CupertinoIcons.ellipsis_vertical,
-                      color: Colors.white,
+                    GestureDetector(
+                      onTapDown: (TapDownDetails details) {
+                        print("showOpp");
+                        _showPopupMenu(details.globalPosition);
+                      },
+                      child: Container(
+                        color: Color(0xff252736),
+                        height: 50,
+                        width: 50,
+                        child: Icon(
+                          CupertinoIcons.ellipsis_vertical,
+                          color: Colors.white,
+                        ),
+                      ),
                     )
                   ],
                 ),
@@ -380,10 +407,10 @@ class _WidgetMainState extends State<WidgetMain> {
                       )),
                       Expanded(
                           child: Container(
-                            child: Center(
-                                child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
+                        child: Center(
+                            child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
                             Icon(
                               CupertinoIcons.rocket,
                               color: Colors.white30,
@@ -395,9 +422,9 @@ class _WidgetMainState extends State<WidgetMain> {
                                 style: TextStyle(color: Colors.white30),
                               ),
                             )
-                        ],
+                          ],
+                        )),
                       )),
-                          )),
                       Expanded(
                           child: GestureDetector(
                         onTap: () {
