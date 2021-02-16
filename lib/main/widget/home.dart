@@ -27,19 +27,51 @@ class _WidgetMainState extends State<WidgetMain> {
     return false;
   }
 
-  _showPopupMenu(Offset offset) {
-    print("showmenu");
+  _showPopupMenu(Offset offset) async {
     double left = offset.dx;
     double top = offset.dy;
-    showMenu(
+    String selected  = await showMenu(
       context: context,
       position: RelativeRect.fromLTRB(left, top, 0, 0),
       items: [
-        PopupMenuItem<String>(child: const Text('Delete'), value: 'Delete'),
+        PopupMenuItem<String>(child: Text('Delete'), value: 'Delete'),
         // PopupMenuItem<String>(child: const Text('Lion'), value: 'Lion'),
       ],
       elevation: 8.0,
     );
+    if(selected == "Delete"){
+      showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Delete Post'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Are you sure you want to delete this post?'),
+                  // Text('Would you like to approve of this message?'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Sure'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+              TextButton(
+                child: Text('Cancel'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 
   Future<String> getData() async {
