@@ -225,7 +225,7 @@ class _WidgetMainState extends State<WidgetMain> {
       child: GestureDetector(
         onTap: () {},
         child: Container(
-            padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 20),
+            padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 10),
             color: Color(0xff252736),
             child: Container(
                 child: Column(
@@ -308,6 +308,8 @@ class _WidgetMainState extends State<WidgetMain> {
                           likeSystem(i);
                         },
                         child: Container(
+                          // color: Color(0xff252736),
+                          height: 50,
                           color: Color(0xff252736),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -377,23 +379,25 @@ class _WidgetMainState extends State<WidgetMain> {
                         ],
                       )),
                       Expanded(
-                          child: Center(
-                              child: Row(
+                          child: Container(
+                            child: Center(
+                                child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(
-                            CupertinoIcons.rocket,
-                            color: Colors.white30,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 5.0),
-                            child: Text(
-                              " Boots",
-                              style: TextStyle(color: Colors.white30),
+                            Icon(
+                              CupertinoIcons.rocket,
+                              color: Colors.white30,
                             ),
-                          )
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5.0),
+                              child: Text(
+                                " Boots",
+                                style: TextStyle(color: Colors.white30),
+                              ),
+                            )
                         ],
-                      ))),
+                      )),
+                          )),
                       Expanded(
                           child: GestureDetector(
                         onTap: () {
@@ -403,6 +407,8 @@ class _WidgetMainState extends State<WidgetMain> {
                           print("show gif");
                         },
                         child: Container(
+                          color: Color(0xff252736),
+                          height: 50,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
