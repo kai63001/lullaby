@@ -57,7 +57,7 @@ class _WidgetMainState extends State<WidgetMain> {
         data[index]["likes"].add({"users": []});
         data[index]["likes"][0]["users"].add(decodedToken["id"]);
       });
-      var response = await http.get(
+      await http.get(
           Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId"),
           headers: {
             "Accept": "application/json",
@@ -68,7 +68,7 @@ class _WidgetMainState extends State<WidgetMain> {
         data[index]["likes"][0]["users"].removeAt(
             data[index]["likes"][0]["users"].indexOf(decodedToken["id"]));
       });
-      var response = await http.get(
+      await http.get(
           Uri.encodeFull("http://192.168.33.105:3000/post/unlike/$postId"),
           headers: {
             "Accept": "application/json",
@@ -78,7 +78,7 @@ class _WidgetMainState extends State<WidgetMain> {
       setState(() {
         data[index]["likes"][0]["users"].add(decodedToken["id"]);
       });
-      var response = await http.get(
+      await http.get(
           Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId/update"),
           headers: {
             "Accept": "application/json",
