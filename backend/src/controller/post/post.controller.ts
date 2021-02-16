@@ -18,6 +18,7 @@ class UsersController {
     this.router.get("/post", authRequest, this.getAllPost);
     this.router.post("/post", authRequest, this.insertPost);
     this.router.get("/post/like/:id", authRequest, this.likeFrist);
+    this.router.delete("/post/:id", authRequest, this.deletePost);
     this.router.get("/post/like/:id/update", authRequest, this.updateLikePost);
     this.router.get("/post/unlike/:id", authRequest, this.disLike);
     this.router.get("/post/:id/comment", authRequest, this.commentList);
@@ -247,6 +248,18 @@ class UsersController {
       },
     ]).exec();
     res.json(apr);
+  }
+
+  private async deletePost(req:Request, res:Response) {
+    const usertoken = req.headers.authorization;
+    const decoded = jwt.decode(usertoken, "shadow");
+    Posts.deleteOne({ _id: mongoose.Types.ObjectId(req.params.id),userId: mongoose.Types.ObjectId(decoded.id) }, function (err: any) {
+      if(err) {
+        res.send("err")
+      }else{
+        res.send("delete posts success");
+      }
+    });
   }
 
 }

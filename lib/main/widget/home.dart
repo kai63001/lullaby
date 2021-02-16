@@ -18,6 +18,7 @@ class WidgetMain extends StatefulWidget {
 class _WidgetMainState extends State<WidgetMain> {
   List data;
   String myUserId;
+  String token;
   Map<String, dynamic> decodedToken;
   bool showGift = false;
   bool containsComment(Object element, String userId) {
@@ -27,19 +28,25 @@ class _WidgetMainState extends State<WidgetMain> {
     return false;
   }
 
-  _showPopupMenu(Offset offset) async {
+  _showPopupMenu(Offset offset, int index) async {
+    print(data[index]["userId"]);
+    print(decodedToken["id"]);
     double left = offset.dx;
     double top = offset.dy;
-    String selected  = await showMenu(
+    String postId = data[index]["_id"];
+
+    String selected = await showMenu(
       context: context,
       position: RelativeRect.fromLTRB(left, top, 0, 0),
       items: [
-        PopupMenuItem<String>(child: Text('Delete'), value: 'Delete'),
+        data[index]["userId"] == decodedToken["id"]
+            ? PopupMenuItem<String>(child: Text('Delete'), value: 'Delete')
+            : PopupMenuItem<String>(child: Text('Report'), value: 'Report'),
         // PopupMenuItem<String>(child: const Text('Lion'), value: 'Lion'),
       ],
       elevation: 8.0,
     );
-    if(selected == "Delete"){
+    if (selected == "Delete") {
       showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
@@ -57,7 +64,18 @@ class _WidgetMainState extends State<WidgetMain> {
             actions: <Widget>[
               TextButton(
                 child: Text('Sure'),
-                onPressed: () {
+                onPressed: () async {
+                  setState(() {
+                    data.removeAt(index);
+                  });
+                  await http.delete(
+                      Uri.encodeFull(
+                          "http://192.168.33.105:3000/post/$postId"),
+                      headers: {
+                        "Accept": "application/json",
+                        "authorization": token
+                      });
+
                   Navigator.of(context).pop();
                 },
               ),
@@ -88,6 +106,7 @@ class _WidgetMainState extends State<WidgetMain> {
       data = jsonDecode(response.body);
       data = data[0]["data"];
       decodedToken = JwtDecoder.decode(prefs.getString("token"));
+      token = prefs.getString("token");
     });
     print(decodedToken);
     print("getData on procress");
@@ -96,8 +115,6 @@ class _WidgetMainState extends State<WidgetMain> {
   }
 
   Future likeSystem(int index) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    decodedToken = JwtDecoder.decode(prefs.getString("token"));
     String postId = data[index]["_id"];
     if (data[index]["likes"].length == 0) {
       setState(() {
@@ -108,7 +125,7 @@ class _WidgetMainState extends State<WidgetMain> {
           Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId"),
           headers: {
             "Accept": "application/json",
-            "authorization": prefs.getString("token")
+            "authorization": token
           });
     } else if (data[index]["likes"][0]["users"].contains(decodedToken["id"])) {
       setState(() {
@@ -119,7 +136,7 @@ class _WidgetMainState extends State<WidgetMain> {
           Uri.encodeFull("http://192.168.33.105:3000/post/unlike/$postId"),
           headers: {
             "Accept": "application/json",
-            "authorization": prefs.getString("token")
+            "authorization": token
           });
     } else {
       setState(() {
@@ -129,7 +146,7 @@ class _WidgetMainState extends State<WidgetMain> {
           Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId/update"),
           headers: {
             "Accept": "application/json",
-            "authorization": prefs.getString("token")
+            "authorization": token
           });
     }
 
@@ -271,7 +288,9 @@ class _WidgetMainState extends State<WidgetMain> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8.0),
       child: GestureDetector(
-        onTap: () {},
+        onTap: () {
+          print(i);
+        },
         child: Container(
             padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 10),
             color: Color(0xff252736),
@@ -336,7 +355,7 @@ class _WidgetMainState extends State<WidgetMain> {
                     GestureDetector(
                       onTapDown: (TapDownDetails details) {
                         print("showOpp");
-                        _showPopupMenu(details.globalPosition);
+                        _showPopupMenu(details.globalPosition, i);
                       },
                       child: Container(
                         color: Color(0xff252736),

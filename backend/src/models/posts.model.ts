@@ -12,7 +12,7 @@ const posts = new Schema(
       type: Object,
     },
     feel : {
-      type: { type: String, default: 'sad' }
+        type: String, default: 'sad'
     },
     date: {
       type: Number,
