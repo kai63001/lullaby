@@ -1,3 +1,4 @@
+import 'package:Lullaby/main/inPost/inpost.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -69,8 +70,7 @@ class _WidgetMainState extends State<WidgetMain> {
                     data.removeAt(index);
                   });
                   await http.delete(
-                      Uri.encodeFull(
-                          "http://192.168.33.105:3000/post/$postId"),
+                      Uri.encodeFull("http://192.168.33.105:3000/post/$postId"),
                       headers: {
                         "Accept": "application/json",
                         "authorization": token
@@ -123,10 +123,7 @@ class _WidgetMainState extends State<WidgetMain> {
       });
       await http.get(
           Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId"),
-          headers: {
-            "Accept": "application/json",
-            "authorization": token
-          });
+          headers: {"Accept": "application/json", "authorization": token});
     } else if (data[index]["likes"][0]["users"].contains(decodedToken["id"])) {
       setState(() {
         data[index]["likes"][0]["users"].removeAt(
@@ -134,20 +131,14 @@ class _WidgetMainState extends State<WidgetMain> {
       });
       await http.get(
           Uri.encodeFull("http://192.168.33.105:3000/post/unlike/$postId"),
-          headers: {
-            "Accept": "application/json",
-            "authorization": token
-          });
+          headers: {"Accept": "application/json", "authorization": token});
     } else {
       setState(() {
         data[index]["likes"][0]["users"].add(decodedToken["id"]);
       });
       await http.get(
           Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId/update"),
-          headers: {
-            "Accept": "application/json",
-            "authorization": token
-          });
+          headers: {"Accept": "application/json", "authorization": token});
     }
 
     print(data[index]["likes"][0]["users"]);
@@ -289,7 +280,12 @@ class _WidgetMainState extends State<WidgetMain> {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: GestureDetector(
         onTap: () {
-          print(i);
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (context) => InPost(data: data),
+            ),
+          );
         },
         child: Container(
             padding: EdgeInsets.only(top: 10, left: 20, right: 20, bottom: 10),
