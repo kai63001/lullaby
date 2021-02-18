@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -19,8 +21,13 @@ class _InPostState extends State<InPost> {
   var moment = Moment.now();
   String myUserId;
   String token;
-  Map<String, dynamic> decodedToken;
+  Map<String, dynamic> decodedToken = {
+    "id": "asdasd",
+    "username": "test",
+    "iat": 1612890450921
+  };
   bool showGift = false;
+  List commentAll = [];
   bool containsComment(Object element, String userId) {
     for (var item in element) {
       if (item["userId"] == userId) return true;
@@ -74,6 +81,7 @@ class _InPostState extends State<InPost> {
                         "authorization": token
                       });
 
+                  Navigator.of(context).pop();
                   Navigator.of(context).pop();
                 },
               ),
@@ -133,12 +141,33 @@ class _InPostState extends State<InPost> {
     print(widget.data["likes"][0]["users"].contains(decodedToken["id"]));
   }
 
+  Future getCommentData() async {
+    String idPost = widget.data["_id"];
+    print("idPost : $idPost");
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.33.105:3000/post/$idPost/comment"),
+        headers: {
+          "Accept": "application/json",
+          "authorization": prefs.getString("token")
+        });
+
+    print("token : " + prefs.getString("token"));
+
+    this.setState(() {
+      commentAll = jsonDecode(response.body);
+    });
+    print(commentAll);
+  }
+
   @override
   void initState() {
     super.initState();
     print("test");
     this.getData();
+    this.getCommentData();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,10 +214,11 @@ class _InPostState extends State<InPost> {
                                   width: 50,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(
-                                        widget.data["users"][0]["avatar"] == null
-                                            ? 'assets/images/avatars/monster.png'
-                                            : widget.data["users"][0]["avatar"]),
+                                    child: Image.asset(widget.data["users"][0]
+                                                ["avatar"] ==
+                                            null
+                                        ? 'assets/images/avatars/monster.png'
+                                        : widget.data["users"][0]["avatar"]),
                                   )),
                               Padding(
                                 padding: const EdgeInsets.only(left: 10.0),
@@ -290,11 +320,14 @@ class _InPostState extends State<InPost> {
                                       child: Text(
                                         ' ' +
                                             (widget.data["likes"].length > 0
-                                                    ? (widget.data["likes"][0]["users"]
+                                                    ? (widget
+                                                                .data["likes"]
+                                                                    [0]["users"]
                                                                 .length ==
                                                             0
                                                         ? ""
-                                                        : widget.data["likes"][0]
+                                                        : widget
+                                                            .data["likes"][0]
                                                                 ["users"]
                                                             .length)
                                                     : "")
@@ -311,13 +344,15 @@ class _InPostState extends State<InPost> {
                               children: [
                                 Icon(
                                   widget.data["comments"].length > 0
-                                      ? (containsComment(widget.data["comments"],
+                                      ? (containsComment(
+                                              widget.data["comments"],
                                               decodedToken["id"])
                                           ? CupertinoIcons.chat_bubble_fill
                                           : CupertinoIcons.chat_bubble)
                                       : CupertinoIcons.chat_bubble,
                                   color: widget.data["comments"].length > 0
-                                      ? (containsComment(widget.data["comments"],
+                                      ? (containsComment(
+                                              widget.data["comments"],
                                               decodedToken["id"])
                                           ? Color(0xff7246ff)
                                           : Colors.white30)
@@ -391,6 +426,108 @@ class _InPostState extends State<InPost> {
                     ],
                   ))),
             ),
+            // comment
+            for (var i in commentAll)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 8.0),
+                child: Container(
+                  decoration: new BoxDecoration(color: Color(0xff252736)),
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: 10, left: 20, right: 20, bottom: 10),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(100),
+                                      color: Color(0xff7549fd),
+                                    ),
+                                    width: 50,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Image.asset(i["users"][0]
+                                                  ["avatar"] ==
+                                              null
+                                          ? 'assets/images/avatars/monster.png'
+                                          : i["users"][0]["avatar"]),
+                                    )),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        i["users"][0]["username"],
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 18),
+                                      ),
+                                      Row(
+                                        children: [
+                                          Text(
+                                            moment.from(new DateTime
+                                                    .fromMillisecondsSinceEpoch(
+                                                i["date"])),
+                                            style: TextStyle(
+                                                color: Colors.white54,
+                                                fontSize: 12),
+                                          ),
+                                          // Text(
+                                          //   " · ",
+                                          //   style: TextStyle(
+                                          //       color: Colors.white54,
+                                          //       fontSize: 12),
+                                          // ),
+                                          // Text(
+                                          //   widget.data["feel"] == null
+                                          //       ? 'sad'
+                                          //       : widget.data["feel"],
+                                          //   style: TextStyle(
+                                          //       color: Colors.redAccent,
+                                          //       fontSize: 12),
+                                          // ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            GestureDetector(
+                              onTapDown: (TapDownDetails details) {
+                                print("showOpp");
+                                _showPopupMenu(details.globalPosition);
+                              },
+                              child: Container(
+                                color: Color(0xff252736),
+                                height: 50,
+                                width: 50,
+                                child: Icon(
+                                  CupertinoIcons.ellipsis_vertical,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            )
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 15.0, bottom: 15),
+                          child: Text(
+                            i["comment"],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
           ],
         ));
   }
