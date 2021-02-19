@@ -219,7 +219,7 @@ class UsersController {
   private commentDelete(req: Request, res: Response): void {
     const usertoken = req.headers.authorization;
     const decoded = jwt.decode(usertoken, "shadow");
-    Comments.deleteOne({ _id: mongoose.Types.ObjectId(req.body.id),userId: mongoose.Types.ObjectId(decoded.id) }, function (err: any) {
+    Comments.deleteOne({ _id: mongoose.Types.ObjectId(req.params.id),userId: mongoose.Types.ObjectId(decoded.id) }, function (err: any) {
       if(err) {
         res.send("err")
       }else{
