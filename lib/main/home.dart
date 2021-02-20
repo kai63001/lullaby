@@ -88,7 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
         systemNavigationBarIconBrightness: Brightness.dark));
     return Scaffold(
       backgroundColor:
-          _selectedIndex != 0 ? Color(0xff1e1e2a) : Color(0xff17171f),
+          // _selectedIndex != 0 ? Color(0xff1e1e2a) : Color(0xff17171f),
+          Color(0xff17171f),
       appBar: AppBar(
           brightness: Brightness.dark, // status bar brightness
           backgroundColor: Color(0xff1e1e2a),
