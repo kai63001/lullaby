@@ -16,11 +16,15 @@ class WidgetMain extends StatefulWidget {
   _WidgetMainState createState() => _WidgetMainState();
 }
 
-class _WidgetMainState extends State<WidgetMain> {
+class _WidgetMainState extends State<WidgetMain>
+    with SingleTickerProviderStateMixin {
   List data;
   String myUserId;
   String token;
   Map<String, dynamic> decodedToken;
+  AnimationController controller;
+  Duration duration = Duration(milliseconds: 500);
+  Tween<Offset> tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
   bool showGift = false;
   bool containsComment(Object element, String userId) {
     for (var item in element) {
@@ -150,6 +154,7 @@ class _WidgetMainState extends State<WidgetMain> {
     super.initState();
     print("test");
     this.getData();
+    controller = AnimationController(duration: duration, vsync: this);
   }
 
   @override
@@ -160,118 +165,122 @@ class _WidgetMainState extends State<WidgetMain> {
     //     for (var item in [1, 2, 3, 4, 5, 7, 8, 9]) buildCard(),
     //   ],
     // );
-    return data != null
-        ? RefreshIndicator(
-            // ignore: missing_return
-            onRefresh: getData,
-            child: Stack(
-              children: [
-                new ListView.builder(
-                    // physics: const BouncingScrollPhysics(),
-                    itemCount: data == null ? 0 : data.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      if (index == 0) {
-                        return Column(
-                          children: [
-                            Container(
-                                width: MediaQuery.of(context).size.width,
-                                decoration:
-                                    new BoxDecoration(color: Color(0xff0B0B0F)),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 12, left: 20, right: 15, bottom: 12),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+    if (data != null) {
+      return RefreshIndicator(
+        // ignore: missing_return
+        onRefresh: getData,
+        child: Stack(
+          children: [
+            new ListView.builder(
+                // physics: const BouncingScrollPhysics(),
+                itemCount: data == null ? 0 : data.length,
+                itemBuilder: (BuildContext context, int index) {
+                  if (index == 0) {
+                    return Column(
+                      children: [
+                        Container(
+                            width: MediaQuery.of(context).size.width,
+                            decoration:
+                                new BoxDecoration(color: Color(0xff0B0B0F)),
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  top: 12, left: 20, right: 15, bottom: 12),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
                                     children: [
-                                      Row(
-                                        children: [
-                                          Icon(
-                                            Icons.fiber_new_rounded,
-                                            color: Colors.white,
-                                          ),
-                                          Text(" NEW POSTS ",
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12)),
-                                          Icon(
-                                            Icons.keyboard_arrow_down_rounded,
-                                            color: Colors.white,
-                                          ),
-                                        ],
-                                      ),
                                       Icon(
-                                        Icons.apps_sharp,
+                                        Icons.fiber_new_rounded,
+                                        color: Colors.white,
+                                      ),
+                                      Text(" NEW POSTS ",
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12)),
+                                      Icon(
+                                        Icons.keyboard_arrow_down_rounded,
                                         color: Colors.white,
                                       ),
                                     ],
                                   ),
-                                )),
-                            Container(
-                              child: buildCard(data[index], index),
-                            ),
-                          ],
-                        );
-                      } else {
-                        return buildCard(data[index], index);
-                      }
-                    }),
-                showGift
-                    ? GestureDetector(
-                        onTap: () {
-                          print("exit");
-                          setState(() {
-                            showGift = false;
-                          });
-                        },
-                        child: Container(
-                          color: new Color.fromRGBO(0, 0, 0, 0.2),
-                          child: GestureDetector(
-                            onTap: () {},
-                            child: DraggableScrollableSheet(
-                              initialChildSize: 0.4,
-                              minChildSize: 0.2,
-                              maxChildSize: 0.6,
-                              builder: (BuildContext context,
-                                  ScrollController scrollController) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                      color: Color(0xff17171f),
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(30),
-                                        topRight: Radius.circular(30),
-                                      )),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 20.0, left: 20, right: 20),
-                                    child: GridView.builder(
-                                      controller: scrollController,
-                                      itemCount: 25,
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.all(10),
-                                          child: Container(
-                                              color: Colors.white,
-                                              child: Text('$index')),
-                                        );
-                                      },
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 5),
-                                    ),
+                                  Icon(
+                                    Icons.apps_sharp,
+                                    color: Colors.white,
                                   ),
-                                );
-                              },
-                            ),
-                          ),
+                                ],
+                              ),
+                            )),
+                        Container(
+                          child: buildCard(data[index], index),
                         ),
-                      )
-                    : Text(''),
-              ],
+                      ],
+                    );
+                  } else {
+                    return buildCard(data[index], index);
+                  }
+                }),
+            if (showGift == true)
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () {
+                    print(controller.status);
+                    if (controller.isDismissed) {
+                      controller.forward();
+                      setState(() {
+                        showGift = true;
+                      });
+                      print("show model");
+                    } else if (controller.isCompleted) {
+                      controller.reverse();
+                      print("hide model");
+                      setState(() {
+                        showGift = false;
+                      });
+                    }
+                  },
+                  child: Container(
+                    color: Color.fromRGBO(0, 0, 0, 0.5),
+                  ),
+                ),
+              )
+            else
+              Container(),
+            Container(
+              child: SlideTransition(
+                position: tween.animate(controller),
+                child: DraggableScrollableSheet(
+                  initialChildSize: 0.3,
+                  minChildSize: 0.3,
+                  maxChildSize: 0.8,
+                  builder: (BuildContext context,
+                      ScrollController scrollController) {
+                    return Container(
+                      decoration: BoxDecoration(
+                          color: Color(0xff1e1e2a),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(30),
+                            topRight: Radius.circular(30),
+                          )),
+                      child: ListView.builder(
+                        controller: scrollController,
+                        itemCount: 25,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ListTile(title: Text('Item $index'));
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-          )
-        : Center(child: CircularProgressIndicator());
+          ],
+        ),
+      );
+    } else {
+      return Center(child: CircularProgressIndicator());
+    }
   }
 
   Padding buildCard(data, i) {
@@ -475,13 +484,24 @@ class _WidgetMainState extends State<WidgetMain> {
                       Expanded(
                           child: GestureDetector(
                         onTap: () {
-                          setState(() {
-                            showGift = !showGift;
-                          });
-                          print("show gif");
+                          print(controller.status);
+                          if (controller.isDismissed) {
+                            controller.forward();
+                            setState(() {
+                              showGift = true;
+                            });
+                            print("show model");
+                          } else if (controller.isCompleted) {
+                            controller.reverse();
+                            print("hide model");
+                            setState(() {
+                              showGift = false;
+                            });
+                          }
                         },
                         child: Container(
                           color: Color(0xff252736),
+                          // color: Colors.red,
                           height: 50,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.end,
