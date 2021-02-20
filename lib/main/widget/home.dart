@@ -159,12 +159,6 @@ class _WidgetMainState extends State<WidgetMain>
 
   @override
   Widget build(BuildContext context) {
-    // return ListView(
-    //   physics: const BouncingScrollPhysics(),
-    //   children: [
-    //     for (var item in [1, 2, 3, 4, 5, 7, 8, 9]) buildCard(),
-    //   ],
-    // );
     if (data != null) {
       return RefreshIndicator(
         // ignore: missing_return
