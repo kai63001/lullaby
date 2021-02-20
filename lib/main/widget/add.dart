@@ -1,3 +1,4 @@
+import 'package:Lullaby/main/inAdd/addPost.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -11,10 +12,9 @@ class WidgetAdd extends StatefulWidget {
 }
 
 class _WidgetAddState extends State<WidgetAdd> {
-  List feel = [{
-    "feel": "sad",
-    "color": 0xfff82929
-  }];
+  List feel = [
+    {"feel": "sad", "color": 0xfff82929}
+  ];
 
   @override
   void initState() {
@@ -26,9 +26,11 @@ class _WidgetAddState extends State<WidgetAdd> {
     return ListView(
       shrinkWrap: true,
       children: [
-        Center(child: Padding(
+        Center(
+            child: Padding(
           padding: const EdgeInsets.all(8.0),
-          child: Text("How do you feel?",style: TextStyle(color: Colors.white,fontSize: 23)),
+          child: Text("How do you feel?",
+              style: TextStyle(color: Colors.white, fontSize: 23)),
         )),
         GridView(
             shrinkWrap: true,
@@ -37,20 +39,28 @@ class _WidgetAddState extends State<WidgetAdd> {
             ),
             children: [
               for (var i in feel)
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: (){
-                    
-                  },
-                  child: Container(
-                      decoration: BoxDecoration(
-                          // color: Color,
-                          border: Border.all(color: Color(i["color"])),
-                          borderRadius: BorderRadius.all(Radius.circular(3))),
-                      child: Center(child: Text(i["feel"].toUpperCase(),style: TextStyle(color:Color(i["color"])),))),
-                ),
-              )
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                            builder: (context) => AddPost(feel: i["feel"])),
+                      );
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            // color: Color,
+                            border: Border.all(color: Color(i["color"])),
+                            borderRadius: BorderRadius.all(Radius.circular(3))),
+                        child: Center(
+                            child: Text(
+                          i["feel"].toUpperCase(),
+                          style: TextStyle(color: Color(i["color"])),
+                        ))),
+                  ),
+                )
             ])
       ],
     );
