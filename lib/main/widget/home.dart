@@ -453,7 +453,7 @@ class _WidgetMainState extends State<WidgetMain>
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
-                    data["title"],
+                    data["title"] == null? "":data["title"],
                     style: TextStyle(color: Colors.white),
                   ),
                 ),

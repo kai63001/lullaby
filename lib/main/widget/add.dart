@@ -46,7 +46,7 @@ class _WidgetAddState extends State<WidgetAdd> {
                       Navigator.push(
                         context,
                         CupertinoPageRoute(
-                            builder: (context) => AddPost(feel: i["feel"])),
+                            builder: (context) => AddPost(feel: i["feel"],color: i["color"],)),
                       );
                     },
                     child: Container(
