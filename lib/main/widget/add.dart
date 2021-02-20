@@ -10,8 +10,11 @@ class WidgetAdd extends StatefulWidget {
   _WidgetAddState createState() => _WidgetAddState();
 }
 
-class _WidgetAddState extends State<WidgetAdd>
-     {
+class _WidgetAddState extends State<WidgetAdd> {
+  List feel = [{
+    "feel": "sad",
+    "color": 0xfff82929
+  }];
 
   @override
   void initState() {
@@ -20,7 +23,36 @@ class _WidgetAddState extends State<WidgetAdd>
 
   @override
   Widget build(BuildContext context) {
-    return Text("test");
+    return ListView(
+      shrinkWrap: true,
+      children: [
+        Center(child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("How do you feel?",style: TextStyle(color: Colors.white,fontSize: 23)),
+        )),
+        GridView(
+            shrinkWrap: true,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 4,
+            ),
+            children: [
+              for (var i in feel)
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: GestureDetector(
+                  onTap: (){
+                    
+                  },
+                  child: Container(
+                      decoration: BoxDecoration(
+                          // color: Color,
+                          border: Border.all(color: Color(i["color"])),
+                          borderRadius: BorderRadius.all(Radius.circular(3))),
+                      child: Center(child: Text(i["feel"].toUpperCase(),style: TextStyle(color:Color(i["color"])),))),
+                ),
+              )
+            ])
+      ],
+    );
   }
-
 }
