@@ -263,12 +263,94 @@ class _WidgetMainState extends State<WidgetMain>
                             topLeft: Radius.circular(30),
                             topRight: Radius.circular(30),
                           )),
-                      child: ListView.builder(
-                        controller: scrollController,
-                        itemCount: 25,
-                        itemBuilder: (BuildContext context, int index) {
-                          return ListTile(title: Text('Item $index'));
-                        },
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Color.fromRGBO(255, 255, 255, 0.2),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(100))),
+                              width: 100,
+                              height: 4,
+                            ),
+                          ),
+                          Container(
+                              child: Padding(
+                            padding:
+                                const EdgeInsets.only(left: 20.0, right: 20),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text("Gifts",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20)),
+                                Container(
+                                  decoration: BoxDecoration(
+                                      color: Color(0xff6B6B88),
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(100))),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Row(
+                                      children: [
+                                        Text.rich(
+                                          TextSpan(
+                                            style:
+                                                TextStyle(color: Colors.white,fontSize: 16),
+                                            children: [
+                                              WidgetSpan(
+                                                child: Icon(
+                                                  CupertinoIcons
+                                                      .bitcoin_circle_fill,
+                                                  color: Color(0xffFFD700),
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: ' Coin : 0 ',
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          )),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(top:20.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  border: Border(top: BorderSide(color: Color.fromRGBO(255, 255, 255, 0.05), width: 1)),
+                                ),
+                                child: GridView.builder(
+                                    padding: const EdgeInsets.all(10),
+                                    controller: scrollController,
+                                    itemCount: 25,
+                                    itemBuilder: (BuildContext context, int index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                            decoration: BoxDecoration(
+                                                color: Color(0xff6B6B88),
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(100))),
+                                            child:
+                                                Center(child: Text('Item $index'))),
+                                      );
+                                    },
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 5,
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   },
