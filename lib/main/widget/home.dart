@@ -26,6 +26,7 @@ class _WidgetMainState extends State<WidgetMain>
   Duration duration = Duration(milliseconds: 500);
   Tween<Offset> tween = Tween(begin: Offset(0, 1), end: Offset(0, 0));
   bool showGift = false;
+  var scrollController = ScrollController();
   bool containsComment(Object element, String userId) {
     for (var item in element) {
       if (item["userId"] == userId) return true;
@@ -149,12 +150,41 @@ class _WidgetMainState extends State<WidgetMain>
     print(data[index]["likes"][0]["users"].contains(decodedToken["id"]));
   }
 
+  Future<String> nextData() async {
+    int page = data[data.length - 1]["date"];
+    print("data 1 :${data.length}");
+    var response = await http.get(
+        Uri.encodeFull("http://192.168.33.105:3000/post?page=$page"),
+        headers: {"Accept": "application/json", "authorization": token});
+
+    this.setState(() {
+      List data2 = jsonDecode(response.body);
+      data.addAll(data2[0]["data"]);
+      // data = [...data]
+      
+    });
+    print("data 2 :${data.length}");
+    print(page);
+    print("mextData on procress");
+
+    return "Success!";
+  }
+
   @override
   void initState() {
     super.initState();
     print("test");
     this.getData();
     controller = AnimationController(duration: duration, vsync: this);
+    scrollController.addListener(() {
+      if (scrollController.position.atEdge) {
+        if (scrollController.position.pixels == 0) {
+          print("ontop");
+        } else {
+          nextData();
+        }
+      }
+    });
   }
 
   @override
@@ -166,6 +196,7 @@ class _WidgetMainState extends State<WidgetMain>
         child: Stack(
           children: [
             new ListView.builder(
+                controller: scrollController,
                 // physics: const BouncingScrollPhysics(),
                 itemCount: data == null ? 0 : data.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -291,8 +322,9 @@ class _WidgetMainState extends State<WidgetMain>
                                       children: [
                                         Text.rich(
                                           TextSpan(
-                                            style:
-                                                TextStyle(color: Colors.white,fontSize: 16),
+                                            style: TextStyle(
+                                                color: Colors.white,
+                                                fontSize: 16),
                                             children: [
                                               WidgetSpan(
                                                 child: Icon(
@@ -316,16 +348,21 @@ class _WidgetMainState extends State<WidgetMain>
                           )),
                           Expanded(
                             child: Padding(
-                              padding: const EdgeInsets.only(top:20.0),
+                              padding: const EdgeInsets.only(top: 20.0),
                               child: Container(
                                 decoration: BoxDecoration(
-                                  border: Border(top: BorderSide(color: Color.fromRGBO(255, 255, 255, 0.05), width: 1)),
+                                  border: Border(
+                                      top: BorderSide(
+                                          color: Color.fromRGBO(
+                                              255, 255, 255, 0.05),
+                                          width: 1)),
                                 ),
                                 child: GridView.builder(
                                     padding: const EdgeInsets.all(10),
                                     controller: scrollController,
                                     itemCount: 25,
-                                    itemBuilder: (BuildContext context, int index) {
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
                                       return Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Container(
@@ -333,8 +370,8 @@ class _WidgetMainState extends State<WidgetMain>
                                                 color: Color(0xff6B6B88),
                                                 borderRadius: BorderRadius.all(
                                                     Radius.circular(100))),
-                                            child:
-                                                Center(child: Text('Item $index'))),
+                                            child: Center(
+                                                child: Text('Item $index'))),
                                       );
                                     },
                                     gridDelegate:
@@ -424,7 +461,10 @@ class _WidgetMainState extends State<WidgetMain>
                                   Text(
                                     data["feel"] == null ? 'sad' : data["feel"],
                                     style: TextStyle(
-                                        color: data["feelColor"] == null ? Colors.redAccent : Color(data["feelColor"]), fontSize: 12),
+                                        color: data["feelColor"] == null
+                                            ? Colors.redAccent
+                                            : Color(data["feelColor"]),
+                                        fontSize: 12),
                                   ),
                                 ],
                               ),
@@ -453,7 +493,7 @@ class _WidgetMainState extends State<WidgetMain>
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0),
                   child: Text(
-                    data["title"] == null? "":data["title"],
+                    data["title"] == null ? "" : data["title"],
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
