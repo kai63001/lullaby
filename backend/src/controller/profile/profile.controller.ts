@@ -1,8 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from "express";
 import authRequest from "../../interfaces/auth.ext";
-const Posts = require("../../models/posts.model");
-const Likes = require("../../models/likes.model");
-const Comments = require("../../models/comments.model");
+const Users = require("../../models/users.model");
 const jwt = require("jwt-simple");
 const mongoose = require("mongoose");
 
@@ -15,10 +13,32 @@ class ProfileController {
   }
 
   public initializeRoutes() {
-    // this.router.get("/post", authRequest, this.getAllPost);
+    this.router.get("/profile", authRequest, this.getMyProfile);
   }
 
-
+  private async getMyProfile(req: Request, res: Response, next: NextFunction) {
+    const usertoken = req.headers.authorization;
+    const decoded = jwt.decode(usertoken, "shadow");
+    console.log(decoded);
+    const user = await Users.aggregate([
+      { $match: { _id: mongoose.Types.ObjectId(decoded.id) } },
+      {
+        $lookup: {
+          from: "posts",
+          localField: "_id",
+          foreignField: "userId",
+          as: "posts",
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          password: 0,
+        },
+      },
+    ]).exec();
+    res.json(user);
+  }
 }
 
 export default ProfileController;
