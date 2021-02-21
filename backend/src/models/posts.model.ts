@@ -14,6 +14,9 @@ const posts = new Schema(
     feel : {
         type: String, default: 'sad'
     },
+    feelColor : {
+        type: Number, default: 0xff854cfd
+    },
     date: {
       type: Number,
     }

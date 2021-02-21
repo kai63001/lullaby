@@ -424,7 +424,7 @@ class _WidgetMainState extends State<WidgetMain>
                                   Text(
                                     data["feel"] == null ? 'sad' : data["feel"],
                                     style: TextStyle(
-                                        color: Colors.redAccent, fontSize: 12),
+                                        color: data["feelColor"] == null ? Colors.redAccent : Color(data["feelColor"]), fontSize: 12),
                                   ),
                                 ],
                               ),

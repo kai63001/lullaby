@@ -13,7 +13,8 @@ class WidgetAdd extends StatefulWidget {
 
 class _WidgetAddState extends State<WidgetAdd> {
   List feel = [
-    {"feel": "sad", "color": 0xfff82929}
+    {"feel": "sad", "color": 0xfff82929},
+    {"feel": "happy", "color": 0xff32CD32},
   ];
 
   @override

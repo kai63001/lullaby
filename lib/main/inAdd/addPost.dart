@@ -31,13 +31,14 @@ class _AddPostState extends State<AddPost> {
             'Content-Type': 'application/json; charset=UTF-8',
             "authorization": token
           },
-          body: jsonEncode(<String, String>{
+          body: jsonEncode(<String, dynamic>{
             'title': postController.text,
-            'feel': widget.feel
+            'feel': widget.feel,
+            'feelColor': widget.color
           }),
         );
+        postController.clear();
         if (response.statusCode == 200) {
-          postController.clear();
           Navigator.of(context).pop();
         } else {
           print(response.body);

@@ -340,7 +340,7 @@ class _InPostState extends State<InPost> {
                                             ? 'sad'
                                             : widget.data["feel"],
                                         style: TextStyle(
-                                            color: Colors.redAccent,
+                                            color: widget.data["feelColor"] == null ? Colors.redAccent : Color(widget.data["feelColor"]),
                                             fontSize: 12),
                                       ),
                                     ],
