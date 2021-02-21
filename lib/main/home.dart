@@ -1,5 +1,6 @@
 import 'package:Lullaby/main/widget/add.dart';
 import 'package:Lullaby/main/widget/home.dart';
+import 'package:Lullaby/main/widget/profile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -50,10 +51,7 @@ class _MyHomePageState extends State<MyHomePage> {
       'Index 2: notif',
       style: optionStyle,
     ),
-    Text(
-      'Index 2: profile',
-      style: optionStyle,
-    ),
+    MyProfile()
   ];
 
   void _onItemTapped(int index) {
