@@ -6,7 +6,7 @@ const Comments = require("../../models/comments.model");
 const jwt = require("jwt-simple");
 const mongoose = require("mongoose");
 
-class UsersController {
+class PostsController {
   public router: express.Router = express.Router();
   public path: string = "/";
 
@@ -265,4 +265,4 @@ class UsersController {
 
 }
 
-export default UsersController;
+export default PostsController;
