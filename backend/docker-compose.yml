@@ -32,4 +32,5 @@ services:
     depends_on:
       - auth
       - post
+      - profile
   
