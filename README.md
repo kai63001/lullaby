@@ -1,4 +1,5 @@
 # Lullaby MiniProject
+Lullaby is social network for Vent your feelings
 
 ## FONTEND
 FLUTTER
