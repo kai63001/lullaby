@@ -18,6 +18,10 @@ services:
     build: ./post/.
     volumes:
       - ./post/.:/usr/src/app/server
+  profile:
+    build: ./profile/.
+    volumes:
+      - ./profile/.:/usr/src/app/server
 
   nginx:
     image: nginx:latest
