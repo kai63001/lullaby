@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  # lb:
+  #   image:  haproxy:alpine
+  #   ports:
+  #     - "8080:8080"
+  #   volumes:
+  #     - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+  #   depends_on: 
+  #     - nodeapp1
+  #     - nodeapp2
+  auth:
+    build: ./auth/.
+    volumes:
+      - ./auth/.:/usr/src/app/serve
+  post:
+    build: ./post/.
+    volumes:
+      - ./post/.:/usr/src/app/server
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - auth
+      - post
+  
