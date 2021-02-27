@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^4.17.11",
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
     "jwt-simple": "^0.5.6",
@@ -19,10 +20,10 @@
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "ts-node": "^9.1.1",
-    "typescript": "^4.1.3",
-    "@types/express": "^4.17.11"
+    "typescript": "^4.1.3"
   },
   "dependencies": {
+    "@types/express": "^4.17.11",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -30,7 +31,6 @@
     "mongoose": "^5.11.15",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
-    "typescript": "^4.1.3",
-    "@types/express": "^4.17.11"
+    "typescript": "^4.1.3"
   }
 }

@@ -12,6 +12,7 @@
 
 #
 node_modules
+/backend/*/dist
 
 # IntelliJ related
 *.iml
