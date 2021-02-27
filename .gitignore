@@ -14,6 +14,7 @@
 node_modules
 /backend/*/dist
 dist
+/client/build
 
 # IntelliJ related
 *.iml
@@ -36,7 +37,6 @@ backend/packages-lock.json
 .packages
 .pub-cache/
 .pub/
-/build/
 
 # Web related
 lib/generated_plugin_registrant.dart

@@ -1,4 +1,0 @@
-#Sat Feb 27 00:39:35 ICT 2021
-base.0=/home/romeo/project/lullaby/client/build/app/intermediates/transforms/dexMerger/debug/0
-path.0=classes.dex
-renamed.0=classes.dex
