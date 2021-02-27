@@ -6,6 +6,8 @@ FLUTTER
 
 ## BACKEND
 Express.js(TypeScript OOP)
+### AUTH
+JWT
 ### Architecture
 Microservices
 ### Database
