@@ -15,4 +15,4 @@ Mongodb
 ### VM
 docker
 ### Web service
-NGINX (Microservices config)
+NGINX (Microservices sidecar)
