@@ -18,31 +18,32 @@ class AddPost extends StatefulWidget {
 class _AddPostState extends State<AddPost> {
   TextEditingController postController = new TextEditingController();
 
-  Future postAdd() async{
-    if(postController.text.isEmpty){
+  Future postAdd() async {
+    if (postController.text.isEmpty) {
       print("empty");
-    }else{
+    } else {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-      Map<String, dynamic> decodedToken = JwtDecoder.decode(prefs.getString("token"));
+      Map<String, dynamic> decodedToken =
+          JwtDecoder.decode(prefs.getString("token"));
       String token = prefs.getString("token");
       final response = await http.post(
-          'http://192.168.33.105:3000/post',
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            "authorization": token
-          },
-          body: jsonEncode(<String, dynamic>{
-            'title': postController.text,
-            'feel': widget.feel,
-            'feelColor': widget.color
-          }),
-        );
-        postController.clear();
-        if (response.statusCode == 200) {
-          Navigator.of(context).pop();
-        } else {
-          print(response.body);
-        }
+        'http://192.168.33.105:8080/post',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "authorization": token
+        },
+        body: jsonEncode(<String, dynamic>{
+          'title': postController.text,
+          'feel': widget.feel,
+          'feelColor': widget.color
+        }),
+      );
+      postController.clear();
+      if (response.statusCode == 200) {
+        Navigator.of(context).pop();
+      } else {
+        print(response.body);
+      }
     }
   }
 

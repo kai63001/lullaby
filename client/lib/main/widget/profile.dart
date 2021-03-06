@@ -24,7 +24,7 @@ class _MyProfileState extends State<MyProfile> {
   Future getMyProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http
-        .get(Uri.encodeFull("http://192.168.33.105:3000/profile"), headers: {
+        .get(Uri.encodeFull("http://192.168.33.105:8080/profile"), headers: {
       "Accept": "application/json",
       "authorization": prefs.getString("token")
     });
@@ -80,12 +80,12 @@ class _MyProfileState extends State<MyProfile> {
               ),
               Center(
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom:18.0),
-                    child: Text(
-                data[0]["username"],
-                style: TextStyle(color: Colors.white, fontSize: 25),
-              ),
-                  ))
+                padding: const EdgeInsets.only(bottom: 18.0),
+                child: Text(
+                  data[0]["username"],
+                  style: TextStyle(color: Colors.white, fontSize: 25),
+                ),
+              ))
             ],
           ),
         ),

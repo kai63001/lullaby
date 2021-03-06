@@ -26,7 +26,7 @@ class _RegisterState extends State<Register> {
         return buildShowDialog(context, 'Please enter username and password');
       } else {
         final response = await http.post(
-          'http://192.168.33.105:3000/auth/register',
+          'http://192.168.33.105:8080/auth/register',
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -109,7 +109,10 @@ class _RegisterState extends State<Register> {
                     border: InputBorder.none,
                     fillColor: Colors.white,
                     hintText: 'Enter your username',
-                    prefixIcon: Icon(CupertinoIcons.person_fill, color: Color(0xffBEBEBE),),
+                    prefixIcon: Icon(
+                      CupertinoIcons.person_fill,
+                      color: Color(0xffBEBEBE),
+                    ),
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
                   ),
                   validator: (value) {
@@ -143,7 +146,10 @@ class _RegisterState extends State<Register> {
                     border: InputBorder.none,
                     fillColor: Colors.white,
                     hintText: 'Password',
-                    prefixIcon: Icon(CupertinoIcons.lock_fill, color: Color(0xffBEBEBE),),
+                    prefixIcon: Icon(
+                      CupertinoIcons.lock_fill,
+                      color: Color(0xffBEBEBE),
+                    ),
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
                   ),
                   validator: (value) {
@@ -177,7 +183,10 @@ class _RegisterState extends State<Register> {
                     fillColor: Colors.white,
                     hintText: 'Confirm Password',
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
-                    prefixIcon: Icon(CupertinoIcons.lock_fill, color: Color(0xffBEBEBE),),
+                    prefixIcon: Icon(
+                      CupertinoIcons.lock_fill,
+                      color: Color(0xffBEBEBE),
+                    ),
                   ),
                   validator: (value) {
                     if (value.isEmpty) {
@@ -209,7 +218,7 @@ class _RegisterState extends State<Register> {
               child: Center(
                   child: Text(
                 "Create account",
-                style: TextStyle(color: Colors.white,fontSize: 21),
+                style: TextStyle(color: Colors.white, fontSize: 21),
               )),
             ),
           ),

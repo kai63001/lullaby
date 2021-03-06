@@ -77,7 +77,7 @@ class _InPostState extends State<InPost> {
                   // });
                   await http.delete(
                       Uri.encodeFull(
-                          "http://192.168.33.105:3000/post/$commentId/comment/delete"),
+                          "http://192.168.33.105:8080/post/$commentId/comment/delete"),
                       headers: {
                         "Accept": "application/json",
                         "authorization": token
@@ -139,7 +139,7 @@ class _InPostState extends State<InPost> {
                   //   data.removeAt(index);
                   // });
                   await http.delete(
-                      Uri.encodeFull("http://192.168.33.105:3000/post/$postId"),
+                      Uri.encodeFull("http://192.168.33.105:8080/post/$postId"),
                       headers: {
                         "Accept": "application/json",
                         "authorization": token
@@ -182,7 +182,7 @@ class _InPostState extends State<InPost> {
         widget.data["likes"][0]["users"].add(decodedToken["id"]);
       });
       await http.get(
-          Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId"),
+          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId"),
           headers: {"Accept": "application/json", "authorization": token});
     } else if (widget.data["likes"][0]["users"].contains(decodedToken["id"])) {
       setState(() {
@@ -190,14 +190,14 @@ class _InPostState extends State<InPost> {
             widget.data["likes"][0]["users"].indexOf(decodedToken["id"]));
       });
       await http.get(
-          Uri.encodeFull("http://192.168.33.105:3000/post/unlike/$postId"),
+          Uri.encodeFull("http://192.168.33.105:8080/post/unlike/$postId"),
           headers: {"Accept": "application/json", "authorization": token});
     } else {
       setState(() {
         widget.data["likes"][0]["users"].add(decodedToken["id"]);
       });
       await http.get(
-          Uri.encodeFull("http://192.168.33.105:3000/post/like/$postId/update"),
+          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId/update"),
           headers: {"Accept": "application/json", "authorization": token});
     }
 
@@ -210,7 +210,7 @@ class _InPostState extends State<InPost> {
     print("idPost : $idPost");
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http.get(
-        Uri.encodeFull("http://192.168.33.105:3000/post/$idPost/comment"),
+        Uri.encodeFull("http://192.168.33.105:8080/post/$idPost/comment"),
         headers: {
           "Accept": "application/json",
           "authorization": prefs.getString("token")
@@ -225,29 +225,28 @@ class _InPostState extends State<InPost> {
   }
 
   Future sendComment() async {
-      String postId = widget.data["_id"];
-      print(postId);
-      if(commentText.text.isEmpty){
-        return buildShowDialog(context, 'Please enter comment');
-      }else{
-        final response = await http.post(
-          'http://192.168.33.105:3000/post/$postId/comment',
-          headers: <String, String>{
-            'Content-Type': 'application/json; charset=UTF-8',
-            "authorization": token
-          },
-          body: jsonEncode(<String, String>{
-            'comment': commentText.text,
-            
-          }),
-        );
-        if (response.statusCode == 200) {
-          this.getCommentData();
-          commentText.clear();
-        } else {
-          print(response.body);
-        }
+    String postId = widget.data["_id"];
+    print(postId);
+    if (commentText.text.isEmpty) {
+      return buildShowDialog(context, 'Please enter comment');
+    } else {
+      final response = await http.post(
+        'http://192.168.33.105:8080/post/$postId/comment',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          "authorization": token
+        },
+        body: jsonEncode(<String, String>{
+          'comment': commentText.text,
+        }),
+      );
+      if (response.statusCode == 200) {
+        this.getCommentData();
+        commentText.clear();
+      } else {
+        print(response.body);
       }
+    }
   }
 
   @override
@@ -340,7 +339,11 @@ class _InPostState extends State<InPost> {
                                             ? 'sad'
                                             : widget.data["feel"],
                                         style: TextStyle(
-                                            color: widget.data["feelColor"] == null ? Colors.redAccent : Color(widget.data["feelColor"]),
+                                            color: widget.data["feelColor"] ==
+                                                    null
+                                                ? Colors.redAccent
+                                                : Color(
+                                                    widget.data["feelColor"]),
                                             fontSize: 12),
                                       ),
                                     ],
@@ -619,7 +622,7 @@ class _InPostState extends State<InPost> {
       bottomSheet: Container(
         decoration: BoxDecoration(color: Color(0xff1e1e2a)),
         child: Padding(
-          padding: const EdgeInsets.only(top:8.0,bottom: 8),
+          padding: const EdgeInsets.only(top: 8.0, bottom: 8),
           child: Row(
             children: [
               // Expanded(
@@ -645,7 +648,7 @@ class _InPostState extends State<InPost> {
               Expanded(
                 flex: 5,
                 child: Padding(
-                  padding: const EdgeInsets.only(left:8.0),
+                  padding: const EdgeInsets.only(left: 8.0),
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(5),
@@ -679,7 +682,7 @@ class _InPostState extends State<InPost> {
               Expanded(
                   flex: 1,
                   child: Padding(
-                    padding: const EdgeInsets.only(left:8.0,right: 8),
+                    padding: const EdgeInsets.only(left: 8.0, right: 8),
                     child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(5),

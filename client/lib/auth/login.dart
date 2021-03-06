@@ -18,11 +18,11 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     Future login() async {
-      if(usernameController.text.isEmpty || passwordController.text.isEmpty){
+      if (usernameController.text.isEmpty || passwordController.text.isEmpty) {
         return buildShowDialog(context, 'Please enter username and password');
-      }else{
+      } else {
         final response = await http.post(
-          'http://192.168.33.105:3000/auth/login',
+          'http://192.168.33.105:8080/auth/login',
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
@@ -34,22 +34,23 @@ class _LoginState extends State<Login> {
         if (response.statusCode == 200) {
           print(response.body);
           if (response.body == "not found") {
-            return buildShowDialog(context, 'Username or Password is incorrect!!');
+            return buildShowDialog(
+                context, 'Username or Password is incorrect!!');
           } else {
             SharedPreferences prefs = await SharedPreferences.getInstance();
             await prefs.setString('token', response.body);
             String token = (prefs.getString('token') ?? "NONE");
             print('check token: $token');
             Navigator.pop(context);
-            Navigator
-            .of(context)
-            .pushReplacement(MaterialPageRoute(builder: (BuildContext context) => Home()));
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (BuildContext context) => Home()));
           }
         } else {
           throw Exception('Failed to load album');
         }
       }
     }
+
     final node = FocusScope.of(context);
     return Scaffold(
       backgroundColor: Color(0xff1e1e2a),
@@ -74,7 +75,7 @@ class _LoginState extends State<Login> {
             padding: const EdgeInsets.only(top: 18.0),
             child: Text(
               "Welcome back \nYou've been missed!!",
-              style: TextStyle(color: Colors.white,fontSize: 25),
+              style: TextStyle(color: Colors.white, fontSize: 25),
             ),
           ),
           Padding(
@@ -94,7 +95,10 @@ class _LoginState extends State<Login> {
                   decoration: const InputDecoration(
                     border: InputBorder.none,
                     fillColor: Colors.white,
-                    prefixIcon: Icon(CupertinoIcons.person_fill, color: Color(0xffBEBEBE),),
+                    prefixIcon: Icon(
+                      CupertinoIcons.person_fill,
+                      color: Color(0xffBEBEBE),
+                    ),
                     hintText: 'Username',
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
                   ),
@@ -129,7 +133,10 @@ class _LoginState extends State<Login> {
                     border: InputBorder.none,
                     fillColor: Colors.white,
                     hintText: 'Password',
-                    prefixIcon: Icon(CupertinoIcons.lock_fill, color: Color(0xffBEBEBE),),
+                    prefixIcon: Icon(
+                      CupertinoIcons.lock_fill,
+                      color: Color(0xffBEBEBE),
+                    ),
                     hintStyle: TextStyle(color: Color(0xffBEBEBE)),
                   ),
                   validator: (value) {
@@ -162,7 +169,7 @@ class _LoginState extends State<Login> {
               child: Center(
                   child: Text(
                 "Sign In",
-                style: TextStyle(color: Colors.white,fontSize: 21),
+                style: TextStyle(color: Colors.white, fontSize: 21),
               )),
             ),
           ),
