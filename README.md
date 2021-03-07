@@ -9,5 +9,9 @@ Express.js(TypeScript OOP)
 JWT
 ### Database
 Mongodb
+### Architecture 
+Simple Microservice (but use same db)
 ### VM
-docker
+Docker
+### Web service
+NginX (use sidecar)
