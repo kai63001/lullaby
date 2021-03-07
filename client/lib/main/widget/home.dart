@@ -75,8 +75,7 @@ class _WidgetMainState extends State<WidgetMain>
                     data.removeAt(index);
                   });
                   await http.delete(
-                      Uri.encodeFull(
-                          "http://165.232.169.242:8080/post/$postId"),
+                      Uri.encodeFull("http://192.168.33.105:8080/post/$postId"),
                       headers: {
                         "Accept": "application/json",
                         "authorization": token
@@ -101,7 +100,7 @@ class _WidgetMainState extends State<WidgetMain>
   Future<String> getData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http
-        .get(Uri.encodeFull("http://165.232.169.242:8080/post"), headers: {
+        .get(Uri.encodeFull("http://192.168.33.105:8080/post"), headers: {
       "Accept": "application/json",
       "authorization": prefs.getString("token")
     });
@@ -128,7 +127,7 @@ class _WidgetMainState extends State<WidgetMain>
         data[index]["likes"][0]["users"].add(decodedToken["id"]);
       });
       await http.get(
-          Uri.encodeFull("http://165.232.169.242:8080/post/like/$postId"),
+          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId"),
           headers: {"Accept": "application/json", "authorization": token});
     } else if (data[index]["likes"][0]["users"].contains(decodedToken["id"])) {
       setState(() {
@@ -136,15 +135,14 @@ class _WidgetMainState extends State<WidgetMain>
             data[index]["likes"][0]["users"].indexOf(decodedToken["id"]));
       });
       await http.get(
-          Uri.encodeFull("http://165.232.169.242:8080/post/unlike/$postId"),
+          Uri.encodeFull("http://192.168.33.105:8080/post/unlike/$postId"),
           headers: {"Accept": "application/json", "authorization": token});
     } else {
       setState(() {
         data[index]["likes"][0]["users"].add(decodedToken["id"]);
       });
       await http.get(
-          Uri.encodeFull(
-              "http://165.232.169.242:8080/post/like/$postId/update"),
+          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId/update"),
           headers: {"Accept": "application/json", "authorization": token});
     }
 
@@ -156,7 +154,7 @@ class _WidgetMainState extends State<WidgetMain>
     int page = data[data.length - 1]["date"];
     print("data 1 :${data.length}");
     var response = await http.get(
-        Uri.encodeFull("http://165.232.169.242:8080/post?page=$page"),
+        Uri.encodeFull("http://192.168.33.105:8080/post?page=$page"),
         headers: {"Accept": "application/json", "authorization": token});
 
     this.setState(() {

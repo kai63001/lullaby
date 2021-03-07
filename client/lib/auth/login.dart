@@ -22,7 +22,7 @@ class _LoginState extends State<Login> {
         return buildShowDialog(context, 'Please enter username and password');
       } else {
         final response = await http.post(
-          'http://165.232.169.242:8080/auth/login',
+          'http://192.168.33.105:8080/auth/login',
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
