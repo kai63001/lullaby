@@ -26,7 +26,7 @@ class _RegisterState extends State<Register> {
         return buildShowDialog(context, 'Please enter username and password');
       } else {
         final response = await http.post(
-          'http://192.168.33.105:8080/auth/register',
+          'http://165.232.169.242:8080/auth/register',
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
           },
