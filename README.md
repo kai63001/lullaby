@@ -11,7 +11,7 @@ JWT
 Mongodb
 ### Architecture 
 Simple Microservice (but use same db)
-### VM
+### VM / CONTAINER
 Docker
 ### Web service
 NginX (use sidecar)
