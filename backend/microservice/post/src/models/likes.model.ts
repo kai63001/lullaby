@@ -8,11 +8,9 @@ const likes = new Schema(
       postId :{
           type: Object
       },
-      users : [
-          {
-                type: Object
-            }
-      ]
+      users : {
+           type: Object
+      },
   }
 );
 

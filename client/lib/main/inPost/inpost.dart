@@ -37,6 +37,13 @@ class _InPostState extends State<InPost> {
     return false;
   }
 
+  bool containsLikes(Object element, String userId) {
+    for (var item in element) {
+      if (item["users"] == userId) return true;
+    }
+    return false;
+  }
+
   _showPopupMenuComment(Offset offset, i) async {
     double left = offset.dx;
     double top = offset.dy;
@@ -176,33 +183,27 @@ class _InPostState extends State<InPost> {
 
   Future likeSystem() async {
     String postId = widget.data["_id"];
-    if (widget.data["likes"].length == 0) {
+    if (containsLikes(widget.data["likes"], decodedToken["id"])) {
+      // unlike
       setState(() {
-        widget.data["likes"].add({"users": []});
-        widget.data["likes"][0]["users"].add(decodedToken["id"]);
-      });
-      await http.get(
-          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId"),
-          headers: {"Accept": "application/json", "authorization": token});
-    } else if (widget.data["likes"][0]["users"].contains(decodedToken["id"])) {
-      setState(() {
-        widget.data["likes"][0]["users"].removeAt(
-            widget.data["likes"][0]["users"].indexOf(decodedToken["id"]));
+        widget.data["likes"]
+            .removeWhere((item) => item["users"] == decodedToken["id"]);
+
+        // data[index]["likes"][0]["users"].add(decodedToken["id"]);
       });
       await http.get(
           Uri.encodeFull("http://192.168.33.105:8080/post/unlike/$postId"),
           headers: {"Accept": "application/json", "authorization": token});
     } else {
+      // like
       setState(() {
-        widget.data["likes"][0]["users"].add(decodedToken["id"]);
+        widget.data["likes"].add({"users": decodedToken["id"]});
+        // data[index]["likes"][0]["users"].add(decodedToken["id"]);
       });
       await http.get(
-          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId/update"),
+          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId"),
           headers: {"Accept": "application/json", "authorization": token});
     }
-
-    print(widget.data["likes"][0]["users"]);
-    print(widget.data["likes"][0]["users"].contains(decodedToken["id"]));
   }
 
   Future getCommentData() async {
@@ -303,10 +304,12 @@ class _InPostState extends State<InPost> {
                                 width: 50,
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
-                                  child: Image.asset(
-                                      widget.data["users"][0]["avatar"] == null
-                                          ? 'assets/images/avatars/monster.png'
-                                          : widget.data["users"][0]["avatar"]),
+                                  child: Image.asset(widget.data["users"][0]
+                                              ["avatar"]["type"] ==
+                                          null
+                                      ? 'assets/images/avatars/monster.png'
+                                      : widget.data["users"][0]["avatar"]
+                                          ["type"]),
                                 )),
                             Padding(
                               padding: const EdgeInsets.only(left: 10.0),
@@ -395,14 +398,14 @@ class _InPostState extends State<InPost> {
                                 children: [
                                   Icon(
                                     widget.data["likes"].length > 0
-                                        ? (widget.data["likes"][0]["users"]
-                                                .contains(decodedToken["id"])
+                                        ? (containsLikes(widget.data["likes"],
+                                                decodedToken["id"])
                                             ? CupertinoIcons.heart_fill
                                             : CupertinoIcons.heart)
                                         : CupertinoIcons.heart,
                                     color: widget.data["likes"].length > 0
-                                        ? (widget.data["likes"][0]["users"]
-                                                .contains(decodedToken["id"])
+                                        ? (containsLikes(widget.data["likes"],
+                                                decodedToken["id"])
                                             ? Color(0xfff73f71)
                                             : Colors.white30)
                                         : Colors.white30,
@@ -410,23 +413,48 @@ class _InPostState extends State<InPost> {
                                   Padding(
                                     padding: const EdgeInsets.only(top: 5.0),
                                     child: Text(
-                                      ' ' +
+                                      " " +
                                           (widget.data["likes"].length > 0
-                                                  ? (widget
-                                                              .data["likes"][0]
-                                                                  ["users"]
-                                                              .length ==
-                                                          0
-                                                      ? ""
-                                                      : widget
-                                                          .data["likes"][0]
-                                                              ["users"]
-                                                          .length)
+                                                  ? widget.data["likes"].length
                                                   : "")
                                               .toString(),
                                       style: TextStyle(color: Colors.white30),
                                     ),
-                                  )
+                                  ),
+                                  // Icon(
+                                  //   widget.data["likes"].length > 0
+                                  //       ? (widget.data["likes"][0]["users"]
+                                  //               .contains(decodedToken["id"])
+                                  //           ? CupertinoIcons.heart_fill
+                                  //           : CupertinoIcons.heart)
+                                  //       : CupertinoIcons.heart,
+                                  //   color: widget.data["likes"].length > 0
+                                  //       ? (widget.data["likes"][0]["users"]
+                                  //               .contains(decodedToken["id"])
+                                  //           ? Color(0xfff73f71)
+                                  //           : Colors.white30)
+                                  //       : Colors.white30,
+                                  // ),
+                                  // Padding(
+                                  //   padding: const EdgeInsets.only(top: 5.0),
+                                  //   child: Text(
+                                  //     ' ' +
+                                  //         (widget.data["likes"].length > 0
+                                  //                 ? (widget
+                                  //                             .data["likes"][0]
+                                  //                                 ["users"]
+                                  //                             .length ==
+                                  //                         0
+                                  //                     ? ""
+                                  //                     : widget
+                                  //                         .data["likes"][0]
+                                  //                             ["users"]
+                                  //                         .length)
+                                  //                 : "")
+                                  //             .toString(),
+                                  //     style: TextStyle(color: Colors.white30),
+                                  //   ),
+                                  // )
                                 ],
                               ),
                             ),
@@ -541,11 +569,11 @@ class _InPostState extends State<InPost> {
                                   width: 50,
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
-                                    child: Image.asset(i["users"][0]
-                                                ["avatar"] ==
+                                    child: Image.asset(i["users"][0]["avatar"]
+                                                ["type"] ==
                                             null
                                         ? 'assets/images/avatars/monster.png'
-                                        : i["users"][0]["avatar"]),
+                                        : i["users"][0]["avatar"]["type"]),
                                   )),
                               Padding(
                                 padding: const EdgeInsets.only(left: 10.0),

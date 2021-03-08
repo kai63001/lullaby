@@ -72,7 +72,7 @@ class _MyProfileState extends State<MyProfile> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Image.asset(data == null
                                     ? 'assets/images/avatars/monster.png'
-                                    : data[0]["avatar"]),
+                                    : data[0]["avatar"]["type"]),
                               ))),
                     )
                   ],

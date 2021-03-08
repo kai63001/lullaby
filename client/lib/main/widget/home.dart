@@ -34,6 +34,13 @@ class _WidgetMainState extends State<WidgetMain>
     return false;
   }
 
+  bool containsLikes(Object element, String userId) {
+    for (var item in element) {
+      if (item["users"] == userId) return true;
+    }
+    return false;
+  }
+
   _showPopupMenu(Offset offset, int index) async {
     print(data[index]["userId"]);
     print(decodedToken["id"]);
@@ -121,30 +128,51 @@ class _WidgetMainState extends State<WidgetMain>
 
   Future likeSystem(int index) async {
     String postId = data[index]["_id"];
-    if (data[index]["likes"].length == 0) {
+    if (containsLikes(data[index]["likes"], decodedToken["id"])) {
+      // unlike
       setState(() {
-        data[index]["likes"].add({"users": []});
-        data[index]["likes"][0]["users"].add(decodedToken["id"]);
-      });
-      await http.get(
-          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId"),
-          headers: {"Accept": "application/json", "authorization": token});
-    } else if (data[index]["likes"][0]["users"].contains(decodedToken["id"])) {
-      setState(() {
-        data[index]["likes"][0]["users"].removeAt(
-            data[index]["likes"][0]["users"].indexOf(decodedToken["id"]));
+        data[index]["likes"]
+            .removeWhere((item) => item["users"] == decodedToken["id"]);
+
+        // data[index]["likes"][0]["users"].add(decodedToken["id"]);
       });
       await http.get(
           Uri.encodeFull("http://192.168.33.105:8080/post/unlike/$postId"),
           headers: {"Accept": "application/json", "authorization": token});
     } else {
+      // like
       setState(() {
-        data[index]["likes"][0]["users"].add(decodedToken["id"]);
+        data[index]["likes"].add({"users": decodedToken["id"]});
+        // data[index]["likes"][0]["users"].add(decodedToken["id"]);
       });
       await http.get(
-          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId/update"),
+          Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId"),
           headers: {"Accept": "application/json", "authorization": token});
     }
+    // if (data[index]["likes"].length == 0) {
+    //   setState(() {
+    //     data[index]["likes"].add({"users": []});
+    //     data[index]["likes"][0]["users"].add(decodedToken["id"]);
+    //   });
+    //   await http.get(
+    //       Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId"),
+    //       headers: {"Accept": "application/json", "authorization": token});
+    // } else if (data[index]["likes"][0]["users"].contains(decodedToken["id"])) {
+    //   setState(() {
+    //     data[index]["likes"][0]["users"].removeAt(
+    //         data[index]["likes"][0]["users"].indexOf(decodedToken["id"]));
+    //   });
+    //   await http.get(
+    //       Uri.encodeFull("http://192.168.33.105:8080/post/unlike/$postId"),
+    //       headers: {"Accept": "application/json", "authorization": token});
+    // } else {
+    //   setState(() {
+    //     data[index]["likes"][0]["users"].add(decodedToken["id"]);
+    //   });
+    //   await http.get(
+    //       Uri.encodeFull("http://192.168.33.105:8080/post/like/$postId/update"),
+    //       headers: {"Accept": "application/json", "authorization": token});
+    // }
 
     print(data[index]["likes"][0]["users"]);
     print(data[index]["likes"][0]["users"].contains(decodedToken["id"]));
@@ -429,9 +457,9 @@ class _WidgetMainState extends State<WidgetMain>
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Image.asset(
-                                  data["users"][0]["avatar"] == null
+                                  data["users"][0]["avatar"]["type"] == null
                                       ? 'assets/images/avatars/monster.png'
-                                      : data["users"][0]["avatar"]),
+                                      : data["users"][0]["avatar"]["type"]),
                             )),
                         Padding(
                           padding: const EdgeInsets.only(left: 10.0),
@@ -514,14 +542,14 @@ class _WidgetMainState extends State<WidgetMain>
                             children: [
                               Icon(
                                 data["likes"].length > 0
-                                    ? (data["likes"][0]["users"]
-                                            .contains(decodedToken["id"])
+                                    ? (containsLikes(
+                                            data["likes"], decodedToken["id"])
                                         ? CupertinoIcons.heart_fill
                                         : CupertinoIcons.heart)
                                     : CupertinoIcons.heart,
                                 color: data["likes"].length > 0
-                                    ? (data["likes"][0]["users"]
-                                            .contains(decodedToken["id"])
+                                    ? (containsLikes(
+                                            data["likes"], decodedToken["id"])
                                         ? Color(0xfff73f71)
                                         : Colors.white30)
                                     : Colors.white30,
@@ -529,19 +557,44 @@ class _WidgetMainState extends State<WidgetMain>
                               Padding(
                                 padding: const EdgeInsets.only(top: 5.0),
                                 child: Text(
-                                  ' ' +
+                                  " " +
                                       (data["likes"].length > 0
-                                              ? (data["likes"][0]["users"]
-                                                          .length ==
-                                                      0
-                                                  ? ""
-                                                  : data["likes"][0]["users"]
-                                                      .length)
+                                              ? data["likes"].length
                                               : "")
                                           .toString(),
                                   style: TextStyle(color: Colors.white30),
                                 ),
                               )
+                              // Icon(
+                              //   data["likes"].length > 0
+                              //       ? (data["likes"][0]["users"]
+                              //               .contains(decodedToken["id"])
+                              //           ? CupertinoIcons.heart_fill
+                              //           : CupertinoIcons.heart)
+                              //       : CupertinoIcons.heart,
+                              //   color: data["likes"].length > 0
+                              //       ? (data["likes"][0]["users"]
+                              //               .contains(decodedToken["id"])
+                              //           ? Color(0xfff73f71)
+                              //           : Colors.white30)
+                              //       : Colors.white30,
+                              // ),
+                              // Padding(
+                              //   padding: const EdgeInsets.only(top: 5.0),
+                              //   child: Text(
+                              //     ' ' +
+                              //         (data["likes"].length > 0
+                              //                 ? (data["likes"][0]["users"]
+                              //                             .length ==
+                              //                         0
+                              //                     ? ""
+                              //                     : data["likes"][0]["users"]
+                              //                         .length)
+                              //                 : "")
+                              //             .toString(),
+                              //     style: TextStyle(color: Colors.white30),
+                              //   ),
+                              // )
                             ],
                           ),
                         ),
