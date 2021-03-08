@@ -14,6 +14,7 @@ class ProfileController {
 
   public initializeRoutes() {
     this.router.get("/profile", authRequest, this.getMyProfile);
+    this.router.post("/profile/edit", authRequest, this.getMyProfile);
   }
 
   private async getMyProfile(req: Request, res: Response, next: NextFunction) {

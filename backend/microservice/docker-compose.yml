@@ -8,8 +8,8 @@ services:
   #   volumes:
   #     - ./haproxy/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
   #   depends_on: 
-  #     - nodeapp1
-  #     - nodeapp2
+  #     - post1
+  #     - post2
   auth:
     build: ./auth/.
     volumes:
@@ -49,9 +49,7 @@ services:
     # environment:
     #   MONGO_INITDB_ROOT_USERNAME: root
     #   MONGO_INITDB_ROOT_PASSWORD: qw123456
-    #   MONGO_DATABASE: wallss
-    #   MONGO_USERNAME: romeo
-    #   MONGO_PASSWORD: qw123456
+   
 
   mongo-express:
     image: mongo-express
