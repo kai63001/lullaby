@@ -2,7 +2,7 @@
 Lullaby is social network for Vent your feelings
 
 ## FONTEND
-FLUTTER
+Flutter
 
 <img src="1.jpg" width="235" height="550" /><img src="2.jpg" width="235" height="550" /><img src="3.jpg" width="235" height="550" /><img src="4.jpg" width="235" height="550" />
 
