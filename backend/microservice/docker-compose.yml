@@ -14,14 +14,20 @@ services:
     build: ./auth/.
     volumes:
       - ./auth/.:/usr/src/app/serve
+    links:
+      - mongo
   post:
     build: ./post/.
     volumes:
       - ./post/.:/usr/src/app/server
+    links:
+      - mongo
   profile:
     build: ./profile/.
     volumes:
       - ./profile/.:/usr/src/app/server
+    links:
+      - mongo
 
   nginx:
     image: nginx:latest
@@ -33,4 +39,28 @@ services:
       - auth
       - post
       - profile
-  
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - data:/data/db
+    # environment:
+    #   MONGO_INITDB_ROOT_USERNAME: root
+    #   MONGO_INITDB_ROOT_PASSWORD: qw123456
+    #   MONGO_DATABASE: wallss
+    #   MONGO_USERNAME: romeo
+    #   MONGO_PASSWORD: qw123456
+
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    # environment:
+    #   ME_CONFIG_MONGODB_ADMINUSERNAME: root1
+    #   ME_CONFIG_MONGODB_ADMINPASSWORD: root
+
+volumes:
+  data:

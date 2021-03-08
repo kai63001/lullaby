@@ -8,7 +8,7 @@ class db {
 
     private connect():void {
         console.log("connecting")
-        var uri = "mongodb+srv://lullaby:Lay@22331@cluster0.80apm.mongodb.net/lullaby?retryWrites=true&w=majority";
+        var uri = "mongodb://mongo:27017/lullaby";
 
         mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true ,useFindAndModify: false,useCreateIndex:true});
 
