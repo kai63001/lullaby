@@ -53,13 +53,13 @@ services:
   #    image: mongo
   #    restart: always
   #    volumes:
-  #      - data:/data/db
+  #      - account_data:/data/db
    
   #  post_db:
   #    image: mongo
   #    restart: always
   #    volumes:
-  #      - data:/data/db
+  #      - post_data:/data/db
 
   mongo-express:
     image: mongo-express
@@ -72,3 +72,5 @@ services:
 
 volumes:
   data:
+  # account_data:
+  # post_data:
