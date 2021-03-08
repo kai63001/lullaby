@@ -27,7 +27,7 @@ class _AddPostState extends State<AddPost> {
           JwtDecoder.decode(prefs.getString("token"));
       String token = prefs.getString("token");
       final response = await http.post(
-        'http://192.168.33.105:8080/post',
+        'http://159.89.199.255:8080/post',
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           "authorization": token

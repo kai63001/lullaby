@@ -24,7 +24,7 @@ class _MyProfileState extends State<MyProfile> {
   Future getMyProfile() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var response = await http
-        .get(Uri.encodeFull("http://192.168.33.105:8080/profile"), headers: {
+        .get(Uri.encodeFull("http://159.89.199.255:8080/profile"), headers: {
       "Accept": "application/json",
       "authorization": prefs.getString("token")
     });
