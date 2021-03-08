@@ -14,4 +14,4 @@ Simple Microservice (but use same db)
 ### VM / CONTAINER
 Docker
 ### Web service
-NginX (use sidecar)
+NginX (API Gateway)
