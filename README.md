@@ -1,6 +1,8 @@
 # Lullaby MiniProject
 Lullaby is social network for Vent your feelings
 
+
+# THIS IS MINIMAL VIABLE PRODUCT(MVP)
 ## FONTEND
 Flutter
 
